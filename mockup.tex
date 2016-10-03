@@ -1,0 +1,120 @@
+\documentclass[a4paper,11pt,oneside,onecolumn,final]{letter}
+% Boilerplate
+\usepackage[czech]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{times}
+\usepackage{blindtext}
+\usepackage{graphicx}
+% Local modifications
+\makeatletter
+%% Header and footer.
+\usepackage{lastpage} % \ref{LastPage}
+\def\ps@firstpage{%
+  \def\@oddhead{%
+    \hspace{-\leftoverhang}%
+    \includegraphics{filetter/label/mu/filetter-fi-czech-color}}%
+  \def\@oddfoot{%
+    \sffamily\fontsize{7}{9}\selectfont%
+    \hspace{-\leftoverhang}%
+    \begin{minipage}[c]\leftoverhang
+      \thepage\ / \pageref{LastPage}%
+    \end{minipage}%
+    \begin{minipage}[b]{.66\linewidth}%
+      \vspace{1em}%
+      \textbf{\fromname} \\[1em]
+      \fromaddress \\
+      \telephonelabel\telephonenum,
+      \emaillabel\fromemail, \fromwebpage \\
+      \bankaccountlabel\frombank,
+      \bankaccountlabel\accountnum,
+      \tinlabel\fromtin,
+      \vatinlabel\fromvatin \\
+      \afterfooter
+    \end{minipage}
+    \begin{minipage}[b]{.33\linewidth}%
+      \vspace{1em}%
+      \hfill\includegraphics{filetter/logo/mu/filetter-fi-english-color}%
+    \end{minipage}%
+  }%
+}%
+\def\ps@plain{%
+      \let\@oddhead\@empty
+      \def\@oddfoot{\normalfont\hfil\thepage\hfil}%
+      \def\@evenfoot{\normalfont\hfil\thepage\hfil}}
+\renewcommand*{\opening}[1]{%
+  \thispagestyle{firstpage}%
+  % Omit the sender address.
+  \begin{flushright}
+    \toname \\ \toaddress
+  \end{flushright}
+  \vspace{2\parskip}%
+  #1\par\nobreak}
+\renewcommand{\closing}[1]{\par\nobreak\vspace{\parskip}%
+  \stopbreaks
+  \noindent
+  \ifx\@empty\fromaddress\else
+  \hspace*{\longindentation}\fi
+  \parbox{\indentedwidth}{\raggedright
+       \ignorespaces #1\\[6\medskipamount]%
+       \ifx\@empty\fromsig
+           \fromname
+       \else \fromsig \fi\strut}%
+   \par}
+\makeatother
+% Support for standard markup
+\name{Masarykova univerzita, Fakulta informatiky}
+\signature{Jméno Příjmení}
+\address{Botanická 554/68a, 602 00 Brno, Česká republika}
+\telephone{+420 549 49 1810}
+% Support for extended markup
+\newcommand*\email[1]{%
+  \def\fromemail{#1}}%
+\email{info@fi.muni.cz}%
+\newcommand*\webpage[1]{%
+  \def\fromwebpage{#1}}%
+\webpage{www.fi.muni.cz}%
+\newcommand*\bankaccount[2]{%
+  \def\frombank{#1}%
+  \def\accountnum{#2}}%
+\bankaccount{KB Brno-město}{85636621/0100}%
+\newcommand*\tin[1]{%
+  \def\fromtin{#1}}%
+\tin{00216224}%
+\newcommand*\vatin[1]{%
+  \def\fromvatin{#1}}%
+\vatin{CZ00216224}%
+% Support for extended strings
+\def\telephonelabel{T: }%
+\def\emaillabel{E: }%
+\def\bankaccountlabel{Bankovní spojení: }%
+\def\accountnumberlabel{ČÚ: }%
+\def\tinlabel{IČ: }%
+\def\vatinlabel{DIČ: }%
+\def\afterfooter{V odpovědi prosím uvádějte naše číslo jednací.}%
+% Support for new lengths.
+\newlength\leftoverhang
+\setlength\leftoverhang{15.8mm}
+\begin{document}
+\begin{letter}{%
+  Vážený pan \\
+  Jméno Příjmení \\
+  Instituce / společnost \\
+  Ulice \\
+  656 91 Brno, Stát }
+\opening{Vážený pane / Vážená paní,}
+
+\Blindtext
+
+\ps
+
+P.S. \blindtext
+
+\closing{S pozdravem}
+
+\cc{Tinker\\Evers\\Chance}
+
+\encl{Foo\\Bar}
+
+\end{letter}
+\end{document}
