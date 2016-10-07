@@ -10,32 +10,35 @@
 \makeatletter
 %% Header and footer.
 \usepackage{lastpage} % \ref{LastPage}
+\usepackage{color}
+\definecolor{muniblue}{cmyk}{0.94,0.45,0,0.44}
 \def\ps@firstpage{%
   \def\@oddhead{%
-    \hspace{-\leftoverhang}%
+    \hspace{-\labeloverhang}%
     \includegraphics{filetter/label/mu/filetter-fi-czech-color}}%
   \def\@oddfoot{%
-    \sffamily\fontsize{7}{9}\selectfont%
-    \hspace{-\leftoverhang}%
-    \begin{minipage}[c]\leftoverhang
-      \thepage\ / \pageref{LastPage}%
-    \end{minipage}%
-    \begin{minipage}[b]{.66\linewidth}%
-      \vspace{1em}%
-      \textbf{\fromname} \\[1em]
-      \fromaddress \\
-      \telephonelabel\telephonenum,
-      \emaillabel\fromemail, \fromwebpage \\
-      \bankaccountlabel\frombank,
-      \bankaccountlabel\accountnum,
-      \tinlabel\fromtin,
-      \vatinlabel\fromvatin \\
-      \afterfooter
+    \sffamily\fontsize{7}{9}\selectfont
+    \color{muniblue}\vspace{1.75cm}%
+    \begin{minipage}[b][\dimexpr(\footskip-1.75cm)][c]\textwidth
+      \hspace{-\labeloverhang}%
+      \begin{tabular}{@{}p{\labeloverhang}@{}l@{}}
+        & \fontsize{8}{10}\selectfont\textbf{\fromname} \\[1em]
+        & \fromaddress \\
+        & \telephonelabel\telephonenum,
+          \emaillabel\fromemail, \fromwebpage \\
+        & \bankaccountlabel\frombank,
+          \accountnumlabel\accountnum,
+          \tinlabel\fromtin,
+          \vatinlabel\fromvatin \\
+        \thepage/\pageref{LastPage} & \afterfooter
+      \end{tabular}
+      \newlength\imagewidth
+      \settowidth\imagewidth
+        {\includegraphics{filetter/logo/mu/filetter-fi-english-color}}%
+      \hfill\begin{minipage}[c]\imagewidth%
+        \includegraphics{filetter/logo/mu/filetter-fi-english-color}%
+      \end{minipage}%
     \end{minipage}
-    \begin{minipage}[b]{.33\linewidth}%
-      \vspace{1em}%
-      \hfill\includegraphics{filetter/logo/mu/filetter-fi-english-color}%
-    \end{minipage}%
   }%
 }%
 \def\ps@plain{%
@@ -88,13 +91,27 @@
 \def\telephonelabel{T: }%
 \def\emaillabel{E: }%
 \def\bankaccountlabel{Bankovní spojení: }%
-\def\accountnumberlabel{ČÚ: }%
+\def\accountnumlabel{ČÚ: }%
 \def\tinlabel{IČ: }%
 \def\vatinlabel{DIČ: }%
 \def\afterfooter{V odpovědi prosím uvádějte naše číslo jednací.}%
 % Support for new lengths.
-\newlength\leftoverhang
-\setlength\leftoverhang{15.8mm}
+\newlength\labeloverhang
+\setlength\labeloverhang{15.5mm}
+% Page layout
+\hoffset=\dimexpr(-1in+3cm)
+\voffset=\dimexpr(-1in+1.25cm)
+\oddsidemargin=0pt
+\topmargin=0pt
+\headheight=3.25cm
+\headsep=0pt
+\textheight=20.5cm
+\textwidth=15cm
+\marginparsep=0pt
+\marginparwidth=0pt
+\footskip=2.5cm
+% Other spacing
+\setlength\parskip{0.8cm}
 \begin{document}
 \begin{letter}{%
   Vážený pan \\
@@ -104,6 +121,7 @@
   656 91 Brno, Stát }
 \opening{Vážený pane / Vážená paní,}
 
+\Blindtext
 \Blindtext
 
 \ps
