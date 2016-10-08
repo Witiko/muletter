@@ -10,8 +10,8 @@
 \makeatletter
 %% Header and footer.
 \usepackage{lastpage} % \ref{LastPage}
-\usepackage{color}
-\definecolor{muniblue}{cmyk}{0.94,0.45,0,0.44}
+\usepackage{xcolor}
+\definecolor{muniblue}{HTML}{1B458F}
 \def\ps@firstpage{%
   \def\@oddhead{%
     \hspace{-\labeloverhang}%
@@ -24,12 +24,12 @@
       \begin{tabular}{@{}p{\labeloverhang}@{}l@{}}
         & \fontsize{8}{10}\selectfont\textbf{\fromname} \\[1em]
         & \fromaddress \\
-        & \telephonelabel\telephonenum,
-          \emaillabel\fromemail, \fromwebpage \\
-        & \bankaccountlabel\frombank,
-          \accountnumlabel\accountnum,
-          \tinlabel\fromtin,
-          \vatinlabel\fromvatin \\
+        & \telephonelabel: \telephonenum,
+          \emaillabel: \fromemail, \fromwebpage \\
+        & \bankaccountlabel: \frombank,
+          \accountnumlabel: \accountnum,
+          \tinlabel: \fromtin,
+          \vatinlabel: \fromvatin \\
         \thepage/\pageref{LastPage} & \afterfooter
       \end{tabular}
       \newlength\imagewidth
@@ -42,38 +42,71 @@
   }%
 }%
 \def\ps@plain{%
-      \let\@oddhead\@empty
-      \def\@oddfoot{\normalfont\hfil\thepage\hfil}%
-      \def\@evenfoot{\normalfont\hfil\thepage\hfil}}
+  \let\@oddhead\@empty
+  \def\@oddfoot{\sffamily\fontsize{7}{9}\selectfont
+    \color{muniblue}\hspace{-\labeloverhang}%
+    \thepage/\pageref{LastPage}}%
+  \def\@evenfoot{\normalfont\hfil\thepage\hfil}}%
+\pagestyle{plain}
+% Redefinitions of standard markup.
+\usepackage{tabularx}
 \renewcommand*{\opening}[1]{%
   \thispagestyle{firstpage}%
   % Omit the sender address.
-  \begin{flushright}
+  \hfill\begin{minipage}{.45\textwidth}%
     \toname \\ \toaddress
-  \end{flushright}
-  \vspace{2\parskip}%
+  \end{minipage}\par
+  \vspace\parskip
+  {\sffamily\fontsize{7}{9}\selectfont
+  \begin{tabular}{%
+      @{}p{.225\textwidth}%
+      @{}p{.325\textwidth}%
+      @{}p{.25\textwidth}%
+      @{}p{.2\textwidth}@{}}%
+    \textcolor{muniblue}{\yourletterlabel:} &
+      \textcolor{muniblue}{\refnumlabel} &
+      \textcolor{muniblue}{\contactinfolabel:} &
+      \textcolor{muniblue}{\placedatelabel} \\
+    \fromreceivedrefnum\newline\fromreceiveddate & \fromrefnum &
+      \fromsig\newline\frompersonalemail & \fromplace\newline\@date 
+  \end{tabular}}\par
+  \vspace\parskip
+  {\bfseries\fontsize{12}{10}\selectfont\fromsubject}\par
+  \vspace{.5\parskip}%
   #1\par\nobreak}
-\renewcommand{\closing}[1]{\par\nobreak\vspace{\parskip}%
-  \stopbreaks
-  \noindent
-  \ifx\@empty\fromaddress\else
-  \hspace*{\longindentation}\fi
-  \parbox{\indentedwidth}{\raggedright
-       \ignorespaces #1\\[6\medskipamount]%
-       \ifx\@empty\fromsig
-           \fromname
-       \else \fromsig \fi\strut}%
-   \par}
+\renewcommand{\closing}[1]{%
+  \par\stopbreaks\noindent\raggedright
+  \ignorespaces #1%
+  \ifx\undefined\fromsigfile
+    \\[\dimexpr(5\medskipamount)]%
+  \else
+    \\[.5\medskipamount]%
+    \includegraphics[height=4\medskipamount]\fromsigfile
+    \\[.5\medskipamount]%
+  \fi
+  \textbf{\ifx\@empty\fromsig
+    \fromname
+  \else
+    \fromsig
+  \fi}\\\fromfunction\strut
+  \par}
 \makeatother
 % Support for standard markup
 \name{Masarykova univerzita, Fakulta informatiky}
 \signature{Jméno Příjmení}
 \address{Botanická 554/68a, 602 00 Brno, Česká republika}
 \telephone{+420 549 49 1810}
+\date{25. února 2016}
 % Support for extended markup
+\newcommand*\subject[1]{%
+  \def\fromsubject{#1}}%
+\subject{Věc dopisu}%
 \newcommand*\email[1]{%
   \def\fromemail{#1}}%
 \email{info@fi.muni.cz}%
+\newcommand*\personalemail[1]{%
+  \def\frompersonalemail{#1}}%
+\personalemail{jmeno@muni.cz}%
 \newcommand*\webpage[1]{%
   \def\fromwebpage{#1}}%
 \webpage{www.fi.muni.cz}%
@@ -87,14 +120,36 @@
 \newcommand*\vatin[1]{%
   \def\fromvatin{#1}}%
 \vatin{CZ00216224}%
+\newcommand*\place[1]{%
+  \def\fromplace{#1}}%
+\place{Brno}%
+\newcommand*\receiveddate[1]{%
+  \def\fromreceiveddate{#1}}%
+\receiveddate{12. února 2016}%
+\newcommand*\receivedrefnum[1]{%
+  \def\fromreceivedrefnum{#1}}%
+\receivedrefnum{XY}%
+\newcommand*\refnum[1]{%
+  \def\fromrefnum{#1}}%
+\refnum{MU-IS/110395/2014/177262/FI}%
+\newcommand*\function[1]{%
+  \def\fromfunction{#1}}%
+\function{funkce}%
+\newcommand*\sigfile[1]{%
+  \def\fromsigfile{#1}}%
+\sigfile{sig}%
 % Support for extended strings
-\def\telephonelabel{T: }%
-\def\emaillabel{E: }%
-\def\bankaccountlabel{Bankovní spojení: }%
-\def\accountnumlabel{ČÚ: }%
-\def\tinlabel{IČ: }%
-\def\vatinlabel{DIČ: }%
+\def\telephonelabel{T}%
+\def\emaillabel{E}%
+\def\bankaccountlabel{Bankovní spojení}%
+\def\accountnumlabel{ČÚ}%
+\def\tinlabel{IČ}%
+\def\vatinlabel{DIČ}%
 \def\afterfooter{V odpovědi prosím uvádějte naše číslo jednací.}%
+\def\yourletterlabel{Váš dopis zn. / ze dne}%
+\def\refnumlabel{Číslo jednací}%
+\def\contactinfolabel{Vyřizuje / e-mail}%
+\def\placedatelabel{Místo / datum}%
 % Support for new lengths.
 \newlength\labeloverhang
 \setlength\labeloverhang{15.5mm}
@@ -121,18 +176,29 @@
   656 91 Brno, Stát }
 \opening{Vážený pane / Vážená paní,}
 
-\Blindtext
-\Blindtext
+at vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis
+praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias
+excepturi sint occaecati cupiditate non provident, similique sunt in culpa
+qui officia deserunt mollitia animi, id est laborum et dolorum fuga.
 
-\ps
+Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore,
+cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod
+maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor
+repellendus.
 
-P.S. \blindtext
+Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus
+saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.
+Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis
+voluptatibus maiores alias consequatur aut perferendis doloribus asperiores
+repellat.
+
+%\ps P.S. \blindtext
 
 \closing{S pozdravem}
 
-\cc{Tinker\\Evers\\Chance}
+% \cc{Tinker\\Evers\\Chance}
 
-\encl{Foo\\Bar}
+% \encl{Foo\\Bar}
 
 \end{letter}
 \end{document}
