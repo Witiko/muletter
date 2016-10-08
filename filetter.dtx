@@ -249,10 +249,11 @@
     \begin{minipage}[b][\dimexpr(\footskip-1.75cm)][c]\textwidth
       \hspace{-\filetter@length@labeloverhang}%
       \begin{tabular}{@{}p{\filetter@length@labeloverhang}@{}l@{}}
-        & \fontsize{8}{10}\selectfont\textbf{\fromname} \\[1em]
-        & \fromaddress \\
-        & \filetter@string@telephone: \telephonenum,
-          \filetter@string@email: \filetter@data@email, \filetter@data@webpage \\
+        & \fontsize{8}{10}\selectfont\textbf{\filetter@data@name} \\[1em]
+        & \filetter@data@address \\
+        & \filetter@string@telephone: \filetter@data@telephone,
+          \filetter@string@email: \filetter@data@email,
+          \filetter@data@webpage \\
         & \filetter@string@bankaccount: \filetter@data@bank,
           \filetter@string@accountnum: \filetter@data@account,
           \filetter@string@tin: \filetter@data@tin,
@@ -302,8 +303,8 @@
         \filetter@string@placedate} \\
     \filetter@data@refnum@received\newline\filetter@data@date@received &
     \filetter@data@refnum &
-    \fromsig\newline\filetter@data@personalemail &
-    \filetter@data@place\newline\@date 
+    \filetter@data@signature\newline\filetter@data@personalemail &
+    \filetter@data@place\newline\filetter@data@date 
   \end{tabular}}\par
   \vspace\parskip
   {\bfseries\fontsize{12}{10}\selectfont\filetter@data@subject}\par
@@ -313,49 +314,59 @@
   \par\stopbreaks\noindent\raggedright
   \ignorespaces #1%
   \\[.5\medskipamount]%
-  \ifx\undefined\filetter@data@sigfile
+  \ifx\undefined\filetter@data@sigfile@defined
     \rule{0pt}{4\medskipamount}\\
   \else
     \includegraphics[height=4\medskipamount]\filetter@data@sigfile\\
   \fi
   \vspace{.5\medskipamount}%
-  \textbf{\ifx\@empty\fromsig
-    \fromname
+  \textbf{\ifx\undefined\filetter@data@signature@defined
+    \filetter@data@name
   \else
-    \fromsig
+    \filetter@data@signature
   \fi}\\\filetter@data@function\strut
   \par}
 %    \end{macrocode}
 % \subsection{Additional Markup}\label{sec:markup:extra}
 % \subsubsection{Global Declarations}
 %    \begin{macrocode}
-\newcommand*\subject[1]{%
-  \def\filetter@data@subject{#1}}%
-\newcommand*\email[1]{%
-  \def\filetter@data@email{#1}}%
-\newcommand*\personalemail[1]{%
-  \def\filetter@data@personalemail{#1}}%
-\newcommand*\webpage[1]{%
-  \def\filetter@data@webpage{#1}}%
-\newcommand*\bankaccount[2]{%
-  \def\filetter@data@bank{#1}%
-  \def\filetter@data@account{#2}}%
-\newcommand*\tin[1]{%
-  \def\filetter@data@tin{#1}}%
-\newcommand*\vatin[1]{%
-  \def\filetter@data@vatin{#1}}%
-\newcommand*\place[1]{%
-  \def\filetter@data@place{#1}}%
-\newcommand*\receiveddate[1]{%
-  \def\filetter@data@date@received{#1}}%
-\newcommand*\receivedrefnum[1]{%
-  \def\filetter@data@refnum@received{#1}}%
-\newcommand*\refnum[1]{%
-  \def\filetter@data@refnum{#1}}%
-\newcommand*\function[1]{%
-  \def\filetter@data@function{#1}}%
-\newcommand*\sigfile[1]{%
-  \def\filetter@data@sigfile{#1}}%
+\newcommand\filetter@redef[2][]{%
+  \expandafter\renewcommand\expandafter*\csname#2\endcsname[1]{%
+    \expandafter\renewcommand\expandafter*\csname
+      filetter@data@\ifx\@empty#1\@empty#2\else#1\fi\endcsname{##1}%
+    \expandafter\let\csname filetter@data@\ifx\@empty#1\@empty#2\else#1\fi
+      @defined\endcsname\relax}%
+  \expandafter\newcommand\expandafter*\csname
+    filetter@data@\ifx\@empty#1\@empty#2\else#1\fi\endcsname
+    {\textbackslash #2}}%
+\filetter@redef{name}%
+\filetter@redef{signature}%
+\filetter@redef{address}%
+\filetter@redef{telephone}%
+\filetter@redef{date}%
+\newcommand\filetter@def[2][]{%
+  \expandafter\newcommand\expandafter*\csname#2\endcsname[1]{%
+    \expandafter\renewcommand\expandafter*\csname
+      filetter@data@\ifx\@empty#1\@empty#2\else#1\fi\endcsname{##1}%
+    \expandafter\let\csname filetter@data@\ifx\@empty#1\@empty#2\else#1\fi
+      @defined\endcsname\relax}%
+  \expandafter\newcommand\expandafter*\csname
+    filetter@data@\ifx\@empty#1\@empty#2\else#1\fi\endcsname
+    {\textbackslash #2}}%
+\filetter@def{subject}%
+\filetter@def{email}%
+\filetter@def{personalemail}%
+\filetter@def{webpage}%
+\filetter@def{bank}%
+\filetter@def{account}%
+\filetter@def{tin}%
+\filetter@def{vatin}%
+\filetter@def{place}%
+\filetter@def[date@received]{receiveddate}%
+\filetter@def{refnum}%
+\filetter@def[refnum@received]{receivedrefnum}%
+\filetter@def{function}%
+\filetter@def{sigfile}%
 %    \end{macrocode}
 % \subsubsection{Colors}
 % |filetter@color@secondary| is the secondary text color.
