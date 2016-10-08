@@ -1,0 +1,386 @@
+% \iffalse\begin{macrocode}
+%<*driver>
+
+\documentclass{ltxdoc}
+
+% Set up the bibliography.
+\usepackage{filecontents}
+\begin{filecontents}{filetter.bib}
+@MANUAL{lamport16,
+  author        =   {Leslie Lamport and Frank Mittelbach and Rainer Schöpf},
+  year          =   {2016},
+  title         =   {Standard Letter Document Class for \LaTeX{} version 2e},
+  urldate       =   {2016-10-08},
+  url           =   {http://mirrors.ctan.org/macros/latex/base/letter.pdf},
+  langid        =   {english}}
+\end{filecontents}
+\usepackage[
+  backend=biber,
+  style=iso-numeric,
+  sorting=none,
+  autolang=other,
+  sortlocale=auto]{biblatex}
+\addbibresource{filetter.bib}
+
+
+% Boilerplate
+\usepackage[utf8]{inputenc} % this file uses UTF-8
+\usepackage[english]{babel}
+\usepackage{tgpagella}
+\usepackage{tabularx}
+\usepackage{hologo}
+\usepackage{booktabs}
+\usepackage[scaled=0.86]{berasans}
+\usepackage[scaled=1.03]{inconsolata}
+\usepackage[resetfonts]{cmap}
+\usepackage[T1]{fontenc} % use 8bit fonts
+\emergencystretch 2dd
+\usepackage{hypdoc}
+\usepackage{microtype}
+\usepackage{ragged2e}
+
+% Making paragraphs numbered
+\makeatletter
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+            {-2.5ex\@plus -1ex \@minus -.25ex}%
+            {1.25ex \@plus .25ex}%
+            {\normalfont\normalsize\bfseries}}
+\makeatother
+\setcounter{secnumdepth}{4} % how many sectioning levels to assign
+\setcounter{tocdepth}{4}    % how many sectioning levels to show
+
+% ltxdoc class options
+\CodelineIndex
+\MakeShortVerb{|}
+\EnableCrossrefs
+\DoNotIndex{}
+\makeatletter
+\c@IndexColumns=2
+\makeatother
+
+\begin{document}
+  \RecordChanges
+  \DocInput{filetter.dtx}
+  \printbibliography
+  \PrintIndex
+  \RaggedRight
+  \PrintChanges
+\end{document}
+
+%</driver>
+%    \end{macrocode}
+%<*class>
+\NeedsTeXFormat{LaTeX2e}
+%
+% Define `\filetter@version` and store it in the `VERSION.tex` file \fi
+{\def\filetter@versiondef#1#2{
+  \gdef\filetter@version@number{#1}
+  \gdef\filetter@version@date{#2}
+  \gdef\filetter@version{#2 #1 filetter MU letter theme}}
+\filetter@versiondef{v0.0.1}{2016/10/08}}
+% {\newwrite\f\openout\f=VERSION\write\f{\filetter@version}\closeout\f}
+%
+% \title{The document class for the typesetting of letters at the Masaryk
+%   University in Brno}
+% \author{Vít Novotný}
+% \date{\today}
+% \maketitle
+%
+% \begin{abstract}
+% \noindent This document details the design and the implementation
+% of the \textsf{filetter} document class, which extends the base
+% \Hologo{LaTeX2e} \textsf{letter} class. Included is technical documentation
+% for anyone who wishes to extend and modify the class as well as
+% information on the basic usage for the ordinary user.
+% \end{abstract}
+%
+% \tableofcontents
+%
+% \section{Basic Usage}
+% To use \textsf{filetter}, specify
+% |\documentclass|\oarg{options}|{filetter}| at the beginning of your
+% \LaTeX{} document; the available \meta{options} are documented in
+% section \ref{sec:clsoptions}. Inside your document, you can use the
+% standard markup provided by the \LaTeX{} \textsf{letter}
+% class~\cite{lamport16} as well as the additional \textsf{filetter}
+% markup specified in section \ref{sec:markup:extra}. To get started
+% quickly, inspect the example files distributed alongside
+% \textsf{filetter}.
+%
+% \section{Requirements}
+% \subsection{Required \TeX{} Engine}
+% \textsf{Filetter} requires an \hologo{eTeX}-based engine that supports
+% the \DescribeMacro\dimexpr|\dimexpr| command. This includes
+% \hologo{pdfTeX}, \hologo{XeTeX}, and \hologo{LuaTeX}, but excludes any
+% version of Knuth's \TeX.
+%
+% \subsection{Required Document Classes}
+% \textsf{Filetter} requires the \LaTeX{} \textsf{letter}
+% class~\cite{lamport16}, which it loads and extends.
+%    \begin{macrocode}
+\ProvidesClass{filetter}[\filetter@version]
+\LoadClass[a4paper,11pt,oneside,onecolumn,final]{letter}
+%    \end{macrocode}
+%
+% \subsection{Required Packages}
+% The \textsf{graphicx} package is used to insert logos, labels, and
+% signatures into documents.
+%    \begin{macrocode}
+\RequirePackage{graphicx}
+%    \end{macrocode}
+% The \textsf{xcolor} package is used for the coloring of text.
+%    \begin{macrocode}
+\RequirePackage{xcolor}
+%    \end{macrocode}
+% Based on the class options, we may also require the \textsf{fontenc}
+% and \textsf{times} packages to set the default font faces.
+% 
+% \section{Class Options}\label{sec:clsoptions}
+%    \begin{macrocode}
+\RequirePackage[T1]{fontenc}
+\RequirePackage{times}
+%    \end{macrocode}
+%
+% \section{Document Layout}
+% \subsection{Paragraphs}
+% \begin{macro}{\parskip}
+% |\parskip| specifies the extraneous vertical space between paragraphs.
+%    \begin{macrocode}
+\setlength\parskip{0.8cm}
+%    \end{macrocode}
+% \end{macro}
+% \subsection{Page Layout}
+% \subsubsection{Vertical Spacing}
+% \begin{macro}{\voffset}
+% |\voffset| is the vertical distance between the top of the paper and
+% the bottom of the top margin minus one inch.
+%    \begin{macrocode}
+\voffset=\dimexpr(-1in + 1.25cm)
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\topmargin}
+% |\topmargin| is the vertical distance between the bottom of the top
+% margin and the top of the header.
+%    \begin{macrocode}
+\topmargin=0pt
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\headheight}
+% |\headheight| is the height of the box that will contain the header.
+%    \begin{macrocode}
+\headheight=3.25cm
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\headsep}
+% |\headsep| is the vertical distance between the bottom of the header
+% and the top of the text block.
+%    \begin{macrocode}
+\headsep=0pt
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\textheight}
+% |\textheight| is the height of text block (including footnotes and
+% figures, excluding header and footer).
+%    \begin{macrocode}
+\textheight=20.5cm
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\footskip}
+% |\footskip| is the vertical distance between the baseline of the last
+% line in the text block and the baseline of the box that contains the
+% footer.
+%    \begin{macrocode}
+\footskip=2.5cm
+%    \end{macrocode}
+% \end{macro}
+% \subsubsection{Horizontal Spacing}
+% \begin{macro}{\hoffset}
+% |\hoffset| is the horizontal distance between the left side of the
+% paper and the left side of the text block.
+%    \begin{macrocode}
+\hoffset=\dimexpr(-1in + 3cm)
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\oddsidemargin}
+% |\oddsidemargin| is the extra space added to the left of the text
+% block.
+%    \begin{macrocode}
+\oddsidemargin=0pt
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\textwidth}
+% |\textwidth| is the width of the text block.
+%    \begin{macrocode}
+\textwidth=15cm
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\marginparsep}
+% |\marginparsep| is the vertical distance between the left side of the
+% text block and the right side of the margin notes.
+%    \begin{macrocode}
+\marginparsep=0pt
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\marginparwidth}
+% |\marginparwidth| is the width margin notes.
+%    \begin{macrocode}
+\marginparwidth=0pt
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\filetter@length@labeloverhang}
+% |\filetter@length@labeloverhang| is the vertical distance between the
+% left side of the label in the head of the first page in a letter and
+% the left side of the text block.
+%    \begin{macrocode}
+\newlength\filetter@length@labeloverhang
+\filetter@length@labeloverhang=15.5mm
+%    \end{macrocode}
+% \end{macro}
+% \subsection{Page Styles}
+%    \begin{macrocode}
+\newlength\filetter@length@templength
+\def\ps@firstpage{%
+  \def\@oddhead{%
+    \hspace{-\filetter@length@labeloverhang}%
+    \includegraphics{filetter/label/mu/filetter-fi-czech-color}}%
+  \def\@oddfoot{%
+    \sffamily\fontsize{7}{9}\selectfont
+    \color{filetter@color@secondary}\vspace{1.75cm}%
+    \begin{minipage}[b][\dimexpr(\footskip-1.75cm)][c]\textwidth
+      \hspace{-\filetter@length@labeloverhang}%
+      \begin{tabular}{@{}p{\filetter@length@labeloverhang}@{}l@{}}
+        & \fontsize{8}{10}\selectfont\textbf{\fromname} \\[1em]
+        & \fromaddress \\
+        & \filetter@string@telephone: \telephonenum,
+          \filetter@string@email: \filetter@data@email, \filetter@data@webpage \\
+        & \filetter@string@bankaccount: \filetter@data@bank,
+          \filetter@string@accountnum: \filetter@data@account,
+          \filetter@string@tin: \filetter@data@tin,
+          \filetter@string@vatin: \filetter@data@vatin \\
+        \thepage/\pageref{LastPage} & \filetter@string@afterfooter
+      \end{tabular}
+      \settowidth\filetter@length@templength
+        {\includegraphics{filetter/logo/mu/filetter-fi-english-color}}%
+      \hfill\begin{minipage}[c]\filetter@length@templength%
+        \includegraphics{filetter/logo/mu/filetter-fi-english-color}%
+      \end{minipage}%
+    \end{minipage}
+  }%
+}%
+\def\ps@plain{%
+  \let\@oddhead\@empty
+  \def\@oddfoot{\sffamily\fontsize{7}{9}\selectfont
+    \color{filetter@color@secondary}%
+    \hspace{-\filetter@length@labeloverhang}%
+    \thepage/\pageref{LastPage}}%
+  \def\@evenfoot{\normalfont\hfil\thepage\hfil}}%
+\pagestyle{plain}%
+%    \end{macrocode}
+% \section{Document Markup}\label{sec:markup}
+% \subsection{Inherited Markup}
+%    \begin{macrocode}
+\renewcommand*{\opening}[1]{%
+  \thispagestyle{firstpage}%
+  % Omit the sender address.
+  \hfill\begin{minipage}{.45\textwidth}%
+    \toname \\ \toaddress
+  \end{minipage}\par
+  \vspace\parskip
+  {\sffamily\fontsize{7}{9}\selectfont
+  \begin{tabular}{%
+      @{}p{.225\textwidth}%
+      @{}p{.325\textwidth}%
+      @{}p{.25\textwidth}%
+      @{}p{.2\textwidth}@{}}%
+    \textcolor{filetter@color@secondary}{%
+      \filetter@string@yourletter:} &
+      \textcolor{filetter@color@secondary}{%
+        \filetter@string@refnum} &
+      \textcolor{filetter@color@secondary}{%
+        \filetter@string@contactinfo:} &
+      \textcolor{filetter@color@secondary}{%
+        \filetter@string@placedate} \\
+    \filetter@data@refnum@received\newline\filetter@data@date@received &
+    \filetter@data@refnum &
+    \fromsig\newline\filetter@data@personalemail &
+    \filetter@data@place\newline\@date 
+  \end{tabular}}\par
+  \vspace\parskip
+  {\bfseries\fontsize{12}{10}\selectfont\filetter@data@subject}\par
+  \vspace{.5\parskip}%
+  #1\par\nobreak}
+\renewcommand{\closing}[1]{%
+  \par\stopbreaks\noindent\raggedright
+  \ignorespaces #1%
+  \\[.5\medskipamount]%
+  \ifx\undefined\filetter@data@sigfile
+    \rule{0pt}{4\medskipamount}\\
+  \else
+    \includegraphics[height=4\medskipamount]\filetter@data@sigfile\\
+  \fi
+  \vspace{.5\medskipamount}%
+  \textbf{\ifx\@empty\fromsig
+    \fromname
+  \else
+    \fromsig
+  \fi}\\\filetter@data@function\strut
+  \par}
+%    \end{macrocode}
+% \subsection{Additional Markup}\label{sec:markup:extra}
+% \subsubsection{Global Declarations}
+%    \begin{macrocode}
+\newcommand*\subject[1]{%
+  \def\filetter@data@subject{#1}}%
+\newcommand*\email[1]{%
+  \def\filetter@data@email{#1}}%
+\newcommand*\personalemail[1]{%
+  \def\filetter@data@personalemail{#1}}%
+\newcommand*\webpage[1]{%
+  \def\filetter@data@webpage{#1}}%
+\newcommand*\bankaccount[2]{%
+  \def\filetter@data@bank{#1}%
+  \def\filetter@data@account{#2}}%
+\newcommand*\tin[1]{%
+  \def\filetter@data@tin{#1}}%
+\newcommand*\vatin[1]{%
+  \def\filetter@data@vatin{#1}}%
+\newcommand*\place[1]{%
+  \def\filetter@data@place{#1}}%
+\newcommand*\receiveddate[1]{%
+  \def\filetter@data@date@received{#1}}%
+\newcommand*\receivedrefnum[1]{%
+  \def\filetter@data@refnum@received{#1}}%
+\newcommand*\refnum[1]{%
+  \def\filetter@data@refnum{#1}}%
+\newcommand*\function[1]{%
+  \def\filetter@data@function{#1}}%
+\newcommand*\sigfile[1]{%
+  \def\filetter@data@sigfile{#1}}%
+%    \end{macrocode}
+% \subsubsection{Colors}
+% |filetter@color@secondary| is the secondary text color.
+%    \begin{macrocode}
+\definecolor{filetter@color@secondary}{HTML}{1B458F}
+%    \end{macrocode}
+%
+% \subsubsection{Words}
+%    \begin{macrocode}
+\def\filetter@string@telephone{T}%
+\def\filetter@string@email{E}%
+\def\filetter@string@bankaccount{Bankovn\'i spojen\'i}%
+\def\filetter@string@accountnum{\v{C}\'U}%
+\def\filetter@string@tin{I\v{C}}%
+\def\filetter@string@vatin{DI\v{C}}%
+\def\filetter@string@afterfooter{%
+  V odpov\v{e}di pros\'im uv\'ad\v{e}jte na\v{s}e \v{c}\'islo
+  jednac\'i.}%
+\def\filetter@string@yourletter{V\'{a}\v{s} dopis zn. / ze dne}%
+\def\filetter@string@refnum{\v{C}\'islo jednac\'i}%
+\def\filetter@string@contactinfo{Vy\v{r}izuje / e-mail}%
+\def\filetter@string@placedate{M\'isto / datum}%
+%    \end{macrocode}
+% \section{Locale files}
+%
+% \iffalse
+%</class>
+% \fi
