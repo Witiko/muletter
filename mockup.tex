@@ -12,6 +12,7 @@
 \usepackage{lastpage} % \ref{LastPage}
 \usepackage{xcolor}
 \definecolor{muniblue}{HTML}{1B458F}
+\newlength\imagewidth
 \def\ps@firstpage{%
   \def\@oddhead{%
     \hspace{-\labeloverhang}%
@@ -32,7 +33,6 @@
           \vatinlabel: \fromvatin \\
         \thepage/\pageref{LastPage} & \afterfooter
       \end{tabular}
-      \newlength\imagewidth
       \settowidth\imagewidth
         {\includegraphics{filetter/logo/mu/filetter-fi-english-color}}%
       \hfill\begin{minipage}[c]\imagewidth%
@@ -77,13 +77,13 @@
 \renewcommand{\closing}[1]{%
   \par\stopbreaks\noindent\raggedright
   \ignorespaces #1%
+  \\[.5\medskipamount]%
   \ifx\undefined\fromsigfile
-    \\[\dimexpr(5\medskipamount)]%
+    \rule{0pt}{4\medskipamount}\\
   \else
-    \\[.5\medskipamount]%
-    \includegraphics[height=4\medskipamount]\fromsigfile
-    \\[.5\medskipamount]%
+    \includegraphics[height=4\medskipamount]\fromsigfile\\
   \fi
+  \vspace{.5\medskipamount}%
   \textbf{\ifx\@empty\fromsig
     \fromname
   \else
@@ -199,6 +199,5 @@ repellat.
 % \cc{Tinker\\Evers\\Chance}
 
 % \encl{Foo\\Bar}
-
 \end{letter}
 \end{document}
