@@ -12,30 +12,30 @@
 \usepackage{lastpage} % \ref{LastPage}
 \usepackage{xcolor}
 \definecolor{muniblue}{HTML}{1B458F}
-\newlength\imagewidth
+\newlength\filetter@imagewidth
 \def\ps@firstpage{%
   \def\@oddhead{%
-    \hspace{-\labeloverhang}%
+    \hspace{-\filetter@labeloverhang}%
     \includegraphics{filetter/label/mu/filetter-fi-czech-color}}%
   \def\@oddfoot{%
     \sffamily\fontsize{7}{9}\selectfont
     \color{muniblue}\vspace{1.75cm}%
     \begin{minipage}[b][\dimexpr(\footskip-1.75cm)][c]\textwidth
-      \hspace{-\labeloverhang}%
-      \begin{tabular}{@{}p{\labeloverhang}@{}l@{}}
+      \hspace{-\filetter@labeloverhang}%
+      \begin{tabular}{@{}p{\filetter@labeloverhang}@{}l@{}}
         & \fontsize{8}{10}\selectfont\textbf{\fromname} \\[1em]
         & \fromaddress \\
         & \telephonelabel: \telephonenum,
-          \emaillabel: \fromemail, \fromwebpage \\
-        & \bankaccountlabel: \frombank,
-          \accountnumlabel: \accountnum,
-          \tinlabel: \fromtin,
-          \vatinlabel: \fromvatin \\
+          \emaillabel: \filetter@email, \filetter@webpage \\
+        & \bankaccountlabel: \filetter@bank,
+          \accountnumlabel: \filetter@account,
+          \tinlabel: \filetter@tin,
+          \vatinlabel: \filetter@vatin \\
         \thepage/\pageref{LastPage} & \afterfooter
       \end{tabular}
-      \settowidth\imagewidth
+      \settowidth\filetter@imagewidth
         {\includegraphics{filetter/logo/mu/filetter-fi-english-color}}%
-      \hfill\begin{minipage}[c]\imagewidth%
+      \hfill\begin{minipage}[c]\filetter@imagewidth%
         \includegraphics{filetter/logo/mu/filetter-fi-english-color}%
       \end{minipage}%
     \end{minipage}
@@ -44,7 +44,7 @@
 \def\ps@plain{%
   \let\@oddhead\@empty
   \def\@oddfoot{\sffamily\fontsize{7}{9}\selectfont
-    \color{muniblue}\hspace{-\labeloverhang}%
+    \color{muniblue}\hspace{-\filetter@labeloverhang}%
     \thepage/\pageref{LastPage}}%
   \def\@evenfoot{\normalfont\hfil\thepage\hfil}}%
 \pagestyle{plain}
@@ -67,30 +67,31 @@
       \textcolor{muniblue}{\refnumlabel} &
       \textcolor{muniblue}{\contactinfolabel:} &
       \textcolor{muniblue}{\placedatelabel} \\
-    \fromreceivedrefnum\newline\fromreceiveddate & \fromrefnum &
-      \fromsig\newline\frompersonalemail & \fromplace\newline\@date 
+    \filetter@receivedrefnum\newline\filetter@receiveddate &
+    \filetter@refnum &
+    \fromsig\newline\filetter@personalemail &
+    \filetter@place\newline\@date 
   \end{tabular}}\par
   \vspace\parskip
-  {\bfseries\fontsize{12}{10}\selectfont\fromsubject}\par
+  {\bfseries\fontsize{12}{10}\selectfont\filetter@subject}\par
   \vspace{.5\parskip}%
   #1\par\nobreak}
 \renewcommand{\closing}[1]{%
   \par\stopbreaks\noindent\raggedright
   \ignorespaces #1%
   \\[.5\medskipamount]%
-  \ifx\undefined\fromsigfile
+  \ifx\undefined\filetter@sigfile
     \rule{0pt}{4\medskipamount}\\
   \else
-    \includegraphics[height=4\medskipamount]\fromsigfile\\
+    \includegraphics[height=4\medskipamount]\filetter@sigfile\\
   \fi
   \vspace{.5\medskipamount}%
   \textbf{\ifx\@empty\fromsig
     \fromname
   \else
     \fromsig
-  \fi}\\\fromfunction\strut
+  \fi}\\\filetter@function\strut
   \par}
-\makeatother
 % Support for standard markup
 \name{Masarykova univerzita, Fakulta informatiky}
 \signature{Jméno Příjmení}
@@ -99,44 +100,44 @@
 \date{25. února 2016}
 % Support for extended markup
 \newcommand*\subject[1]{%
-  \def\fromsubject{#1}}%
+  \def\filetter@subject{#1}}%
 \subject{Věc dopisu}%
 \newcommand*\email[1]{%
-  \def\fromemail{#1}}%
+  \def\filetter@email{#1}}%
 \email{info@fi.muni.cz}%
 \newcommand*\personalemail[1]{%
-  \def\frompersonalemail{#1}}%
+  \def\filetter@personalemail{#1}}%
 \personalemail{jmeno@muni.cz}%
 \newcommand*\webpage[1]{%
-  \def\fromwebpage{#1}}%
+  \def\filetter@webpage{#1}}%
 \webpage{www.fi.muni.cz}%
 \newcommand*\bankaccount[2]{%
-  \def\frombank{#1}%
-  \def\accountnum{#2}}%
+  \def\filetter@bank{#1}%
+  \def\filetter@account{#2}}%
 \bankaccount{KB Brno-město}{85636621/0100}%
 \newcommand*\tin[1]{%
-  \def\fromtin{#1}}%
+  \def\filetter@tin{#1}}%
 \tin{00216224}%
 \newcommand*\vatin[1]{%
-  \def\fromvatin{#1}}%
+  \def\filetter@vatin{#1}}%
 \vatin{CZ00216224}%
 \newcommand*\place[1]{%
-  \def\fromplace{#1}}%
+  \def\filetter@place{#1}}%
 \place{Brno}%
 \newcommand*\receiveddate[1]{%
-  \def\fromreceiveddate{#1}}%
+  \def\filetter@receiveddate{#1}}%
 \receiveddate{12. února 2016}%
 \newcommand*\receivedrefnum[1]{%
-  \def\fromreceivedrefnum{#1}}%
+  \def\filetter@receivedrefnum{#1}}%
 \receivedrefnum{XY}%
 \newcommand*\refnum[1]{%
-  \def\fromrefnum{#1}}%
+  \def\filetter@refnum{#1}}%
 \refnum{MU-IS/110395/2014/177262/FI}%
 \newcommand*\function[1]{%
-  \def\fromfunction{#1}}%
+  \def\filetter@function{#1}}%
 \function{funkce}%
 \newcommand*\sigfile[1]{%
-  \def\fromsigfile{#1}}%
+  \def\filetter@sigfile{#1}}%
 \sigfile{sig}%
 % Support for extended strings
 \def\telephonelabel{T}%
@@ -151,8 +152,8 @@
 \def\contactinfolabel{Vyřizuje / e-mail}%
 \def\placedatelabel{Místo / datum}%
 % Support for new lengths.
-\newlength\labeloverhang
-\setlength\labeloverhang{15.5mm}
+\newlength\filetter@labeloverhang
+\setlength\filetter@labeloverhang{15.5mm}
 % Page layout
 \hoffset=\dimexpr(-1in+3cm)
 \voffset=\dimexpr(-1in+1.25cm)
@@ -167,6 +168,7 @@
 \footskip=2.5cm
 % Other spacing
 \setlength\parskip{0.8cm}
+\makeatother
 \begin{document}
 \begin{letter}{%
   Vážený pan \\
