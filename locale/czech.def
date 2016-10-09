@@ -1,0 +1,13 @@
+\def\filetter@string@czech@telephone{T}%
+\def\filetter@string@czech@email{E}%
+\def\filetter@string@czech@bank{Bankovn\'i spojen\'i}%
+\def\filetter@string@czech@account{\v{C}\'U}%
+\def\filetter@string@czech@tin{I\v{C}}%
+\def\filetter@string@czech@vatin{DI\v{C}}%
+\def\filetter@string@czech@afterfooter{%
+  V~odpov\v{e}di pros\'im uv\'ad\v{e}jte na\v{s}e \v{c}\'islo
+  jednac\'i.}%
+\def\filetter@string@czech@yourletter{V\'{a}\v{s} dopis zn. / ze dne}%
+\def\filetter@string@czech@refno{\v{C}\'islo jednac\'i}%
+\def\filetter@string@czech@contactinfo{Vy\v{r}izuje / e-mail}%
+\def\filetter@string@czech@placedate{M\'isto / datum}%
