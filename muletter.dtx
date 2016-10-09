@@ -394,7 +394,8 @@
   \def\@oddfoot{\sffamily\fontsize{7}{9}\selectfont
     \color{muletter@color@secondary}%
     \hspace{-\muletter@length@labeloverhang}%
-    \thepage/\pageref{LastPage}%
+    \thepage/\pageref{muletter@lastpage@letter%
+      \themuletter@counter@letterno}%
   }%
 }%
 %    \end{macrocode}

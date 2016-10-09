@@ -3,7 +3,7 @@
 set -e
 shopt -s globstar
 shopt -s nullglob
-../../fetch-pdf.sh \
+../fetch-pdf.sh \
  's#Univerzita–obecne#Ostatni-pracoviste/base#;
   s#Univerzita-rektorat#Ostatni-pracoviste/rect#;
   s#.*/(.*)/.*/.*/[^_]*_stitek_outline-prostor_cz\.pdf$#muletter-$1-czech.pdf#;
