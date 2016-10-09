@@ -5,7 +5,7 @@
 
 % Set up the bibliography.
 \usepackage{filecontents}
-\begin{filecontents}{filetter.bib}
+\begin{filecontents}{muletter.bib}
 @MANUAL{lamport16,
   author        =   {Leslie Lamport and Frank Mittelbach and Rainer Schöpf},
   year          =   {2016},
@@ -20,7 +20,7 @@
   sorting=none,
   autolang=other,
   sortlocale=auto]{biblatex}
-\addbibresource{filetter.bib}
+\addbibresource{muletter.bib}
 
 
 % Boilerplate
@@ -60,7 +60,7 @@
 
 \begin{document}
   \RecordChanges
-  \DocInput{filetter.dtx}
+  \DocInput{muletter.dtx}
   \printbibliography
   \PrintIndex
   \RaggedRight
@@ -72,13 +72,13 @@
 %<*class>
 \NeedsTeXFormat{LaTeX2e}
 %
-% Define `\filetter@version` and store it in the `VERSION.tex` file \fi
-{\def\filetter@versiondef#1#2{
-  \gdef\filetter@version@number{#1}
-  \gdef\filetter@version@date{#2}
-  \gdef\filetter@version{#2 #1 filetter MU letter theme}}
-\filetter@versiondef{v0.0.1}{2016/10/08}}
-% {\newwrite\f\openout\f=VERSION\write\f{\filetter@version}\closeout\f}
+% Define `\muletter@version` and store it in the `VERSION.tex` file \fi
+{\def\muletter@versiondef#1#2{
+  \gdef\muletter@version@number{#1}
+  \gdef\muletter@version@date{#2}
+  \gdef\muletter@version{#2 #1 muletter MU letter theme}}
+\muletter@versiondef{v0.0.1}{2016/10/08}}
+% {\newwrite\f\openout\f=VERSION\write\f{\muletter@version}\closeout\f}
 %
 % \title{The document class for the typesetting of letters at the Masaryk
 %   University in Brno}
@@ -88,7 +88,7 @@
 %
 % \begin{abstract}
 % \noindent This document details the design and the implementation
-% of the \textsf{filetter} document class, which extends the base
+% of the \textsf{muletter} document class, which extends the base
 % \Hologo{LaTeX2e} \textsf{letter} class. Included is technical documentation
 % for anyone who wishes to extend and modify the class as well as
 % information on the basic usage for the ordinary user.
@@ -97,53 +97,103 @@
 % \tableofcontents
 %
 % \section{Basic Usage}
-% To use \textsf{filetter}, specify
-% |\documentclass|\oarg{options}|{filetter}| at the beginning of your
+% To use \textsf{muletter}, specify
+% |\documentclass|\oarg{options}|{muletter}| at the beginning of your
 % \LaTeX{} document; the available \meta{options} are documented in
 % section \ref{sec:clsoptions}. Inside your document, you can use the
 % standard markup provided by the \LaTeX{} \textsf{letter}
-% class~\cite{lamport16} as well as the additional \textsf{filetter}
+% class~\cite{lamport16} as well as the additional \textsf{muletter}
 % markup specified in section \ref{sec:markup:extra}. To get started
 % quickly, inspect the example files distributed alongside
-% \textsf{filetter}.
+% \textsf{muletter}.
 %
 % \section{Requirements}
 % \subsection{Required \TeX{} Engine}
-% \textsf{Filetter} requires an \hologo{eTeX}-based engine that supports
+% \textsf{Muletter} requires an \hologo{eTeX}-based engine that supports
 % the \DescribeMacro\dimexpr|\dimexpr| command. This includes
 % \hologo{pdfTeX}, \hologo{XeTeX}, and \hologo{LuaTeX}, but excludes any
 % version of Knuth's \TeX.
 %
 % \subsection{Required Document Classes}
-% \textsf{Filetter} requires the \LaTeX{} \textsf{letter}
+% \textsf{Muletter} requires the \LaTeX{} \textsf{letter}
 % class~\cite{lamport16}, which it loads and extends.
 %    \begin{macrocode}
-\ProvidesClass{filetter}[\filetter@version]
-\LoadClass[a4paper,11pt,oneside,onecolumn,final]{letter}
+\ProvidesClass{muletter}[\muletter@version]%
+\LoadClass[a4paper,11pt,oneside,onecolumn,final]{letter}%
 %    \end{macrocode}
 %
 % \subsection{Required Packages}
 % The \textsf{graphicx} package is used to insert logos, labels, and
 % signatures into documents.
 %    \begin{macrocode}
-\RequirePackage{graphicx}
+\RequirePackage{graphicx}%
 %    \end{macrocode}
 % The \textsf{xcolor} package is used for the coloring of text.
 %    \begin{macrocode}
-\RequirePackage{xcolor}
+\RequirePackage{xcolor}%
 %    \end{macrocode}
-% Based on the class options, we may also require the \textsf{fontenc}
-% and \textsf{times} packages to set the default font faces.
+% The \textsf{etoolbox} package is used for patching the
+% |\includegraphics| command.
+%    \begin{macrocode}
+\RequirePackage{etoolbox}%
+%    \end{macrocode}
+% Based on the class options, we may also require the \textsf{cmap},
+% \textsf{fontenc}, and \textsf{times} packages to set the default font
+% faces.
 % 
 % \section{Class Options}\label{sec:clsoptions}
+% \subsection{Defining the Options}
+% \begin{macro}{\muletter@option@times}
+% The |times| class option defines |\muletter@option@times| and the
+% |nofonts| class option undefines it.
 %    \begin{macrocode}
-\RequirePackage[resetfonts]{cmap}%
-\RequirePackage[T1]{fontenc}%
-\RequirePackage{times}%
-\def\filetter@filename@label{filetter/label/mu/filetter-fi-czech-color}%
-\def\filetter@filename@logo{filetter/logo/mu/filetter-fi-english-color}%
-\def\filetter@pathname@locale{filetter/locale/}%
+\DeclareOption{times}{%
+  \let\muletter@option@times\relax
+}%
+\DeclareOption{nofonts}{%
+  \let\muletter@option@times\undefined
+}%
 %    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\muletter@option@monochrome}
+% The |monochrome| class option defines |\muletter@option@monochrome|
+% and the |color| class option undefines it.
+%    \begin{macrocode}
+\DeclareOption{monochrome}{%
+  \let\muletter@option@monochrome\relax
+}%
+\DeclareOption{color}{%
+  \let\muletter@option@monochrome\undefined
+}%
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{Processing the Options}
+% We will use the |times| and |color| options by default.
+%    \begin{macrocode}
+\ExecuteOptions{times, color}%
+%    \end{macrocode}
+% We process the options.
+%    \begin{macrocode}
+\ProcessOptions
+%    \end{macrocode}
+%
+% If the |times| option has been specified, we load the \textsf{cmap},
+% \textsf{fontenc}, and \textsf{times} to set the serif, sans-serif, and
+% monospace font faces to Times, Helvetica, and TXTT, respectively.
+%    \begin{macrocode}
+\ifx\undefined\muletter@option@times\else
+  \RequirePackage[resetfonts]{cmap}%
+  \RequirePackage[T1]{fontenc}%
+  \RequirePackage{times}%
+\fi
+%    \end{macrocode}
+%
+% If the |monochrome| option has been specified, we will do nothing in
+% particular. We will use the information to place monochrome logos and
+% labels into the header and footer of the first page in a letter. The
+% \textsf{xcolor} package will react to the |monochrome| option by
+% removing all text coloring.
 %
 % \section{Document Layout}
 % \subsection{Paragraphs}
@@ -231,13 +281,13 @@
 \marginparwidth=0pt
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\filetter@length@labeloverhang}
-% |\filetter@length@labeloverhang| is the vertical distance between the
+% \begin{macro}{\muletter@length@labeloverhang}
+% |\muletter@length@labeloverhang| is the vertical distance between the
 % left side of the label in the head of the first page in a letter and
 % the left side of the text block.
 %    \begin{macrocode}
-\newlength\filetter@length@labeloverhang
-\filetter@length@labeloverhang=15.5mm
+\newlength\muletter@length@labeloverhang
+\muletter@length@labeloverhang=15.5mm
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\longindentation}
@@ -249,11 +299,11 @@
 %    \end{macrocode}
 % \end{macro}
 % \subsubsection{Miscellaneous}
-% \begin{macro}{\filetter@length@templength}
-% |\filetter@length@templength| is a helper length register for
+% \begin{macro}{\muletter@temp@length}
+% |\muletter@temp@length| is a helper length register for
 % computing box sizes.
 %    \begin{macrocode}
-\newlength\filetter@length@templength
+\newlength\muletter@temp@length
 %    \end{macrocode}
 % \end{macro}
 % \subsection{Page Styles}
@@ -261,15 +311,18 @@
 % |\ps@firstpage| enables the |firstpage| page style, which corresponds
 % to the first page of a letter.
 %    \begin{macrocode}
-\def\ps@firstpage{%
+\renewcommand\ps@firstpage{%
 %    \end{macrocode}
 % \begin{macro}{\@oddhead}
 % |\@oddhead| is the document header. It contains a logo in the
 % |firstpage| page style.
 %    \begin{macrocode}
   \def\@oddhead{%
-    \hspace{-\filetter@length@labeloverhang}%
-    \includegraphics\filetter@filename@label}%
+    \hspace{-\muletter@length@labeloverhang}%
+    \muletter@subroutine@includegraphics
+      {\muletter@filename@label}%
+      {\muletter@filename@label@fallback}%
+  }%
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\@oddfoot}
@@ -278,36 +331,41 @@
 %    \begin{macrocode}
   \def\@oddfoot{%
     \sffamily\fontsize{7}{9}\selectfont
-    \color{filetter@color@secondary}\vspace{1.75cm}%
+    \color{muletter@color@secondary}\vspace{1.75cm}%
     \begin{minipage}[b][\dimexpr(\footskip-1.75cm)][c]\textwidth
-      \hspace{-\filetter@length@labeloverhang}%
+      \hspace{-\muletter@length@labeloverhang}%
 %    \end{macrocode}
 % We typeset sender information.
 %    \begin{macrocode}
-      \begin{tabular}{@{}p{\filetter@length@labeloverhang}@{}l@{}}
-        & \scriptsize\selectfont\textbf{\filetter@data@name} \\[1em]
-        & \filetter@data@address \\
-        & \filetter@string{telephone}: \filetter@data@telephone,
-          \filetter@string{email}: \filetter@data@email,
-          \filetter@data@webpage \\
-        & \filetter@string{bank}: \filetter@data@bank,
-          \filetter@string{account}: \filetter@data@account,
-          \filetter@string{tin}: \filetter@data@tin,
-          \filetter@string{vatin}: \filetter@data@vatin \\
+      \begin{tabular}{@{}p{\muletter@length@labeloverhang}@{}l@{}}
+        & \scriptsize\selectfont\textbf{\muletter@data@name} \\[1em]
+        & \muletter@data@address \\
+        & \muletter@string{telephone}: \muletter@data@telephone,
+          \muletter@string{email}: \muletter@data@email,
+          \muletter@data@webpage \\
+        & \muletter@string{bank}: \muletter@data@bank,
+          \muletter@string{account}: \muletter@data@account,
+          \muletter@string{tin}: \muletter@data@tin,
+          \muletter@string{vatin}: \muletter@data@vatin \\
 %    \end{macrocode}
 % We typeset the current page number and the number of pages of the
 % current letter.
 %    \begin{macrocode}
-        \thepage/\pageref{filetter@lastpage@letter%
-          \thefiletter@counter@letterno} & \filetter@string{afterfooter}
+        \thepage/\pageref{muletter@lastpage@letter%
+          \themuletter@counter@letterno} & \muletter@string{afterfooter}
       \end{tabular}
 %    \end{macrocode}
 % We typeset a logo.
 %    \begin{macrocode}
-      \settowidth\filetter@length@templength
-        {\includegraphics\filetter@filename@logo}%
-      \hfill\begin{minipage}[c]\filetter@length@templength%
-        \includegraphics\filetter@filename@logo
+      \settowidth\muletter@temp@length{%
+        \muletter@subroutine@includegraphics
+          {\muletter@filename@logo}%
+          {\muletter@filename@logo@fallback}%
+      }%
+      \hfill\begin{minipage}[c]\muletter@temp@length
+        \muletter@subroutine@includegraphics
+          {\muletter@filename@logo}%
+          {\muletter@filename@logo@fallback}%
       \end{minipage}%
     \end{minipage}
   }%
@@ -320,7 +378,7 @@
 % |\ps@plain| enables the |plain| page style, which corresponds to the
 % all pages of a letter other than the first one.
 %    \begin{macrocode}
-\def\ps@plain{%
+\renewcommand\ps@plain{%
 %    \end{macrocode}
 % \begin{macro}{\@oddhead}
 % |\@oddhead| is the document header. It is empty in the |plain| page
@@ -334,8 +392,8 @@
 % |plain| page style.
 %    \begin{macrocode}
   \def\@oddfoot{\sffamily\fontsize{7}{9}\selectfont
-    \color{filetter@color@secondary}%
-    \hspace{-\filetter@length@labeloverhang}%
+    \color{muletter@color@secondary}%
+    \hspace{-\muletter@length@labeloverhang}%
     \thepage/\pageref{LastPage}%
   }%
 }%
@@ -348,7 +406,7 @@
 % \end{macro}
 %
 % Page styles other than |firstpage| and |plain| are unsupported in
-% \textsf{filetter} by default.
+% \textsf{muletter} by default.
 % 
 % \section{Available Commands}\label{sec:markup}
 % \subsection{Document Markup}
@@ -357,32 +415,32 @@
 % letter addressed to \meta{destination address}. The page numbering is
 % reset at the beginning of the |letter| environment. 
 % 
-% \begin{macro}{\filetter@original@letter}
-% We increment the |filetter@counter@letterno| counter at the beginning
+% \begin{macro}{\muletter@original@letter}
+% We increment the |muletter@counter@letterno| counter at the beginning
 % of the |letter| environment.
 %    \begin{macrocode}
-\let\filetter@original@letter\letter
+\let\muletter@original@letter\letter
 \renewcommand\letter[1]{%
-  \filetter@original@letter{#1}%
-  \stepcounter{filetter@counter@letterno}%
+  \muletter@original@letter{#1}%
+  \stepcounter{muletter@counter@letterno}%
 }%
 %    \end{macrocode}
 % \end{macro}
 % 
-% \begin{macro}{\filetter@original@endletter}
-% We define a |filetter@lastpage@letter|\meta{letter number} label
+% \begin{macro}{\muletter@original@endletter}
+% We define a |muletter@lastpage@letter|\meta{letter number} label
 % at the end of the |letter| environment and at the end of the document,
 % where \meta{letter number} corresponds to the value of the
-% |filetter@counter@letterno| counter.  This reference will be used to
+% |muletter@counter@letterno| counter.  This reference will be used to
 % display the number of pages in a letter in the footer.
 %    \begin{macrocode}
-\let\filetter@original@endletter\endletter
+\let\muletter@original@endletter\endletter
 \renewcommand\endletter{%
-  \label{filetter@lastpage@letter\thefiletter@counter@letterno}%
-  \filetter@original@endletter
+  \label{muletter@lastpage@letter\themuletter@counter@letterno}%
+  \muletter@original@endletter
 }%
 \AtEndDocument{%
-  \label{filetter@lastpage@letter\thefiletter@counter@letterno}%
+  \label{muletter@lastpage@letter\themuletter@counter@letterno}%
 }%
 %    \end{macrocode}
 % \end{macro}
@@ -412,24 +470,24 @@
       @{}p{.325\textwidth}%
       @{}p{.25\textwidth}%
       @{}p{.2\textwidth}@{}}%
-    \textcolor{filetter@color@secondary}{%
-      \filetter@string{yourletter}:} &
-      \textcolor{filetter@color@secondary}{%
-        \filetter@string{refno}} &
-      \textcolor{filetter@color@secondary}{%
-        \filetter@string{contactinfo}:} &
-      \textcolor{filetter@color@secondary}{%
-        \filetter@string{placedate}} \\
-    \filetter@data@refno@received\newline\filetter@data@date@received &
-    \filetter@data@refno &
-    \filetter@data@signature\newline\filetter@data@email@personal &
-    \filetter@data@place\newline\filetter@data@date 
+    \textcolor{muletter@color@secondary}{%
+      \muletter@string{yourletter}:} &
+      \textcolor{muletter@color@secondary}{%
+        \muletter@string{refno}} &
+      \textcolor{muletter@color@secondary}{%
+        \muletter@string{contactinfo}:} &
+      \textcolor{muletter@color@secondary}{%
+        \muletter@string{placedate}} \\
+    \muletter@data@refno@received\newline\muletter@data@date@received &
+    \muletter@data@refno &
+    \muletter@data@signature\newline\muletter@data@email@personal &
+    \muletter@data@place\newline\muletter@data@date 
   \end{tabular}}\par
   \vspace\parskip
 %    \end{macrocode}
 % We typeset the subject of the letter.
 %    \begin{macrocode}
-  {\bfseries\large\filetter@data@subject}\par
+  {\bfseries\large\muletter@data@subject}\par
   \vspace{.5\parskip}%
 %    \end{macrocode}
 % We typeset the \meta{salutation}.
@@ -454,51 +512,51 @@
     \\[.5\medskipamount]%
 %    \end{macrocode}
 % We typeset either
-% |\filetter@data@signature@image| if it has been defined, or a strut.
+% |\muletter@data@signature@image| if it has been defined, or a strut.
 %    \begin{macrocode}
-    \ifx\undefined\filetter@data@signature@image@defined
+    \ifx\undefined\muletter@data@signature@image@defined
       \rule{0pt}{4\medskipamount}\\
     \else
       \includegraphics[height=4\medskipamount]%
-        \filetter@data@signature@image\\
+        \muletter@data@signature@image\\
     \fi
     \vspace{.5\medskipamount}%
 %    \end{macrocode}
 % We typeset the sender's name.
 %    \begin{macrocode}
-    \textbf{\filetter@data@signature}\\
+    \textbf{\muletter@data@signature}\\
 %    \end{macrocode}
 % We typeset the sender's designation.
 %    \begin{macrocode}
-    \filetter@data@designation\strut
+    \muletter@data@designation\strut
     \par
   }%
 }%
 %    \end{macrocode}
 % \end{macro}
 % \subsection{Data Specification}
-% \begin{macro}{\filetter@def}
-% \begin{macro}{\filetter@def@command}
-% |\filetter@def|\oarg{getter}\marg{setter} defines the commands
-% |\|\meta{setter}\marg{value} and |\filetter@data@|\meta{getter}. If
+% \begin{macro}{\muletter@def}
+% \begin{macro}{\muletter@def@command}
+% |\muletter@def|\oarg{getter}\marg{setter} defines the commands
+% |\|\meta{setter}\marg{value} and |\muletter@data@|\meta{getter}. If
 % \meta{getter} is undefined, then we define \meta{getter} as
 % \meta{setter}. When |\|\meta{setter}\marg{value} is invoked, it
-% defines |\filetter@data@|\meta{getter} as \meta{value} and
-% defines |\filetter@data@|\meta{getter}|@defined|. Before 
-% definition, |\filetter@data@|\meta{getter} produces
+% defines |\muletter@data@|\meta{getter} as \meta{value} and
+% defines |\muletter@data@|\meta{getter}|@defined|. Before 
+% definition, |\muletter@data@|\meta{getter} produces
 % ``\textcolor{red}{\texttt{\textbackslash}\meta{setter}}'' to make it
 % clear to the user which command to use. The command used to define
-% |\|\meta{setter} is |\filetter@def@command|.
+% |\|\meta{setter} is |\muletter@def@command|.
 %    \begin{macrocode}
-\newcommand\filetter@def[2][]{%
-  \expandafter\filetter@def@command\expandafter*\csname#2\endcsname[1]{%
+\newcommand\muletter@def[2][]{%
+  \expandafter\muletter@def@command\expandafter*\csname#2\endcsname[1]{%
     \expandafter\renewcommand\expandafter*\csname
-      filetter@data@\ifx\@empty#1\@empty#2\else#1\fi\endcsname{##1}%
-    \expandafter\let\csname filetter@data@\ifx\@empty#1\@empty#2\else#1\fi
+      muletter@data@\ifx\@empty#1\@empty#2\else#1\fi\endcsname{##1}%
+    \expandafter\let\csname muletter@data@\ifx\@empty#1\@empty#2\else#1\fi
       @defined\endcsname\relax
   }%
   \expandafter\newcommand\expandafter*\csname
-    filetter@data@\ifx\@empty#1\@empty#2\else#1\fi\endcsname
+    muletter@data@\ifx\@empty#1\@empty#2\else#1\fi\endcsname
     {\textcolor{red}{\textbackslash #2}}
 }%
 %    \end{macrocode}
@@ -508,238 +566,238 @@
 % \subsubsection{Inherited Commands}
 % The following commands are redefinitions of identically named commands
 % from the \LaTeX{} \textsf{letter} class. We will define them using
-% |\filetter@def| with |\filetter@def@command| defined as |\renewcommand|.
+% |\muletter@def| with |\muletter@def@command| defined as |\renewcommand|.
 %    \begin{macrocode}
-\let\filetter@def@command\renewcommand
+\let\muletter@def@command\renewcommand
 %    \end{macrocode}
 % \begin{macro}{\name}
-% \begin{macro}{\filetter@data@name}
-% |\name|\marg{sender name} defines |\filetter@data@name| as
+% \begin{macro}{\muletter@data@name}
+% |\name|\marg{sender name} defines |\muletter@data@name| as
 % \meta{sender name}, where \meta{sender name} corresponds to the
 % sender's name that will be displayed along with the sender address.
 % in the footer of the first page in a letter.
 %    \begin{macrocode}
-\filetter@def{name}%
+\muletter@def{name}%
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \begin{macro}{\signature}
-% \begin{macro}{\filetter@data@signature}
-% |\signature|\marg{signature} defines |\filetter@data@signature| as
+% \begin{macro}{\muletter@data@signature}
+% |\signature|\marg{signature} defines |\muletter@data@signature| as
 % \meta{signature}, where \meta{signature} corresponds to the signature
 % that will be displayed in the closing matter.
 %    \begin{macrocode}
-\filetter@def{signature}%
+\muletter@def{signature}%
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \begin{macro}{\address}
-% \begin{macro}{\filetter@data@address}
-% |\signature|\marg{sender address} defines |\filetter@data@address| as
+% \begin{macro}{\muletter@data@address}
+% |\signature|\marg{sender address} defines |\muletter@data@address| as
 % \meta{sender address}, where \meta{sender address} corresponds to the
 % sender address that will be displayed along with the sender name in
 % the footer of the first page in a letter.
 %    \begin{macrocode}
-\filetter@def{address}%
+\muletter@def{address}%
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \begin{macro}{\telephone}
-% \begin{macro}{\filetter@data@telephone}
-% |\telephone|\marg{number} defines |\filetter@data@telephone| as
+% \begin{macro}{\muletter@data@telephone}
+% |\telephone|\marg{number} defines |\muletter@data@telephone| as
 % \meta{number}, where \meta{number} corresponds to the sender's phone
 % number that will be displayed in the footer of the first page in a
 % letter.
 %    \begin{macrocode}
-\filetter@def{telephone}%
+\muletter@def{telephone}%
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \begin{macro}{\date}
-% \begin{macro}{\filetter@data@date}
-% |\telephone|\marg{date} defines |\filetter@data@date| as \meta{date},
+% \begin{macro}{\muletter@data@date}
+% |\telephone|\marg{date} defines |\muletter@data@date| as \meta{date},
 % where \meta{date} corresponds to the sending date that will be
 % displayed in the footer of the first page in a letter.
 %    \begin{macrocode}
-\filetter@def{date}%
+\muletter@def{date}%
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % 
 % \subsubsection{Additional Commands}
-% The following commands are new \textsf{filetter} additions. We will
-% define them using |\filetter@def| with |\filetter@def@command| defined
+% The following commands are new \textsf{muletter} additions. We will
+% define them using |\muletter@def| with |\muletter@def@command| defined
 % as |\newcommand|.
 %    \begin{macrocode}
-\let\filetter@def@command\newcommand
+\let\muletter@def@command\newcommand
 %    \end{macrocode}
 % \begin{macro}{\subject}
-% \begin{macro}{\filetter@data@subject}
-% |\subject|\marg{subject} defines |\filetter@data@subject| as
+% \begin{macro}{\muletter@data@subject}
+% |\subject|\marg{subject} defines |\muletter@data@subject| as
 % \meta{subject}, where \meta{subject} corresponds to the letter subject
 % that will be displayed in the opening matter.
 %    \begin{macrocode}
-\filetter@def{subject}%
+\muletter@def{subject}%
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \begin{macro}{\email}
-% \begin{macro}{\filetter@data@email}
-% |\email|\marg{e-mail address} defines |\filetter@data@email| as
+% \begin{macro}{\muletter@data@email}
+% |\email|\marg{e-mail address} defines |\muletter@data@email| as
 % \meta{e-mail address}, where \meta{e-mail address} corresponds to the
 % sender's e-mail address that will be displayed in the footer of the
 % first page in a letter.
 %    \begin{macrocode}
-\filetter@def{email}%
+\muletter@def{email}%
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \begin{macro}{\personalemail}
-% \begin{macro}{\filetter@data@email@personal}
+% \begin{macro}{\muletter@data@email@personal}
 % |\personalemail|\marg{e-mail address} defines
-% |\filetter@data@email@personal| as \meta{e-mail address}, where
+% |\muletter@data@email@personal| as \meta{e-mail address}, where
 % \meta{e-mail address} corresponds to the sender's personal e-mail
 % address that will be displayed in the opening matter.
 %    \begin{macrocode}
-\filetter@def[email@personal]{personalemail}%
+\muletter@def[email@personal]{personalemail}%
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \begin{macro}{\webpage}
-% \begin{macro}{\filetter@data@webpage}
-% |\webpage|\marg{\textsc{url}} defines |\filetter@data@webpage| as
+% \begin{macro}{\muletter@data@webpage}
+% |\webpage|\marg{\textsc{url}} defines |\muletter@data@webpage| as
 % \meta{\textsc{url}}, where \meta{\textsc{url}} corresponds to the
 % \textsc{url} of the sender's webpage that will be displayed in the
 % footer of the first page in a letter.
 %    \begin{macrocode}
-\filetter@def{webpage}%
+\muletter@def{webpage}%
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \begin{macro}{\bank}
-% \begin{macro}{\filetter@data@bank}
-% |\bank|\marg{bank name} defines |\filetter@data@bank| as \meta{bank
+% \begin{macro}{\muletter@data@bank}
+% |\bank|\marg{bank name} defines |\muletter@data@bank| as \meta{bank
 % name}, where \meta{bank name} corresponds to the name of the sender's
 % bank that will be displayed along with the sender's bank account
 % number in the footer of the first page in a letter.
 %    \begin{macrocode}
-\filetter@def{bank}%
+\muletter@def{bank}%
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \begin{macro}{\bank}
-% \begin{macro}{\filetter@data@bank}
-% |\account|\marg{account number} defines |\filetter@data@account| as
+% \begin{macro}{\muletter@data@bank}
+% |\account|\marg{account number} defines |\muletter@data@account| as
 % \meta{account number}, where \meta{account number} corresponds to the
 % sender's bank account number that will be displayed along with the
 % name of the sender's bank in the footer of the first page in a letter.
 %    \begin{macrocode}
-\filetter@def{account}%
+\muletter@def{account}%
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \begin{macro}{\tin}
-% \begin{macro}{\filetter@data@tin}
-% |\tin|\marg{identification number} defines |\filetter@data@tin| as
+% \begin{macro}{\muletter@data@tin}
+% |\tin|\marg{identification number} defines |\muletter@data@tin| as
 % \meta{identification number}, where \meta{identification number}
 % corresponds to the sender's taxpayer identification number that will
 % be displayed along with the sender's \textsc{vat} identification
 % number in the footer of the first page in a letter.
 %    \begin{macrocode}
-\filetter@def{tin}%
+\muletter@def{tin}%
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \begin{macro}{\vatin}
-% \begin{macro}{\filetter@data@vatin}
-% |\vatin|\marg{identification number} defines |\filetter@data@vatin| as
+% \begin{macro}{\muletter@data@vatin}
+% |\vatin|\marg{identification number} defines |\muletter@data@vatin| as
 % \meta{identification number}, where \meta{identification number}
 % corresponds to the sender's \textsc{vat} identification number that
 % will be displayed along with the sender's taxpayer identification
 % number in the footer of the first page in a letter.
 %    \begin{macrocode}
-\filetter@def{vatin}%
+\muletter@def{vatin}%
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \begin{macro}{\place}
-% \begin{macro}{\filetter@data@place}
-% |\place|\marg{place} defines |\filetter@data@place| as
+% \begin{macro}{\muletter@data@place}
+% |\place|\marg{place} defines |\muletter@data@place| as
 % \meta{place}, where \meta{place}
 % corresponds to the place from which a letter is being sent, which
 % will be displayed along with the sending date in the opening matter.
 %    \begin{macrocode}
-\filetter@def{place}%
+\muletter@def{place}%
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \begin{macro}{\receiveddate}
-% \begin{macro}{\filetter@data@date@received}
-% |\receiveddate|\marg{date} defines |\filetter@data@date@received| as
+% \begin{macro}{\muletter@data@date@received}
+% |\receiveddate|\marg{date} defines |\muletter@data@date@received| as
 % \meta{date}, where \meta{date} corresponds to the sending date of the
 % previous letter in a conversation, which will be displayed along with
 % the reference number of the previous letter in a conversation in the
 % opening matter.
 %    \begin{macrocode}
-\filetter@def[date@received]{receiveddate}%
+\muletter@def[date@received]{receiveddate}%
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \begin{macro}{\refno}
-% \begin{macro}{\filetter@data@refno}
+% \begin{macro}{\muletter@data@refno}
 % |\refno|\marg{number} defines
-% |\filetter@data@refno| as \meta{number}, where \meta{number}
+% |\muletter@data@refno| as \meta{number}, where \meta{number}
 % corresponds to the reference number of a letter, which will be
 % displayed in the opening matter.
 %    \begin{macrocode}
-\filetter@def{refno}%
+\muletter@def{refno}%
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \begin{macro}{\receivedrefno}
-% \begin{macro}{\filetter@data@refno@received}
+% \begin{macro}{\muletter@data@refno@received}
 % |\receivedrefno|\marg{number} defines
-% |\filetter@data@refno@received| as \meta{number}, where \meta{number}
+% |\muletter@data@refno@received| as \meta{number}, where \meta{number}
 % corresponds to the reference number of the previous letter in a
 % conversation, which will be displayed along with the sending date of
 % the previous letter in a conversation in the opening matter.
 %    \begin{macrocode}
-\filetter@def[refno@received]{receivedrefno}%
+\muletter@def[refno@received]{receivedrefno}%
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \begin{macro}{\designation}
-% \begin{macro}{\filetter@data@designation}
-% |\designation|\marg{designation} defines |\filetter@data@designation|
+% \begin{macro}{\muletter@data@designation}
+% |\designation|\marg{designation} defines |\muletter@data@designation|
 % as \meta{designation}, where \meta{designation} corresponds to the
 % sender's designation or department, which will be displayed in the
 % closing matter.
 %    \begin{macrocode}
-\filetter@def{designation}%
+\muletter@def{designation}%
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \begin{macro}{\signatureimage}
-% \begin{macro}{\filetter@data@signature@image}
+% \begin{macro}{\muletter@data@signature@image}
 % |\signatureimage|\marg{file name} defines
-% |\filetter@data@signature@image| as \meta{file name}, where \meta{file
+% |\muletter@data@signature@image| as \meta{file name}, where \meta{file
 % name} corresponds to the file name of the signature image that will be
 % displayed in the closing matter.
 %    \begin{macrocode}
-\filetter@def[signature@image]{signatureimage}%
+\muletter@def[signature@image]{signatureimage}%
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
 % \begin{macro}{\locale}
-% \begin{macro}{\filetter@data@locale}
+% \begin{macro}{\muletter@data@locale}
 % |\locale|\marg{locale name} defines
-% |\filetter@data@locale| as \meta{locale}, where \meta{locale}
+% |\muletter@data@locale| as \meta{locale}, where \meta{locale}
 % corresponds to the locale of a letter. The default value is
 % either |\languagename| defined by the packages of \textsf{babel} and
 % \textsf{polyglossia}, or |english|, when |\languagename| is undefined.
 %    \begin{macrocode}
-\filetter@def{locale}%
-\renewcommand\filetter@data@locale{%
+\muletter@def{locale}%
+\locale{%
   \ifx\languagename\undefined
     english%
   \else
@@ -747,144 +805,335 @@
   \fi
 }%
 %    \end{macrocode}
-% \end{macro}
-% \end{macro}
-% \subsection{Counters}
-% |filetter@counter@letterno| is the number of the current letter.
+% We define |\muletter@data@locale@logo| as the locale for logos and
+% |\muletter@data@locale@label| as the locale for labels. Both will
+% inherit the value of |\muletter@data@locale|.
 %    \begin{macrocode}
-\newcounter{filetter@counter@letterno}%
+\newcommand*\muletter@data@locale@logo{%
+  \muletter@data@locale
+}%
+\newcommand*\muletter@data@locale@label{%
+  \muletter@data@locale
+}%
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+% \begin{macro}{\workplace}
+% \begin{macro}{\muletter@data@workplace}
+% |\workplace|\marg{workplace} defines
+% |\muletter@data@workplace| as \meta{work place}, where \meta{work
+% place} corresponds to the work place whose logo and label will be
+% displayed in the header and footer of the first page in a letter.
+% The \meta{work place}s recognized at the Masaryk University in Brno
+% are outlined in table \ref{table:workplaces}. The default \meta{work
+% place} is |base|.
+% \begin{table}
+% \begin{center}
+% \begin{tabular}{lc}
+%   \toprule
+%   Work place & \meta{work place} \\
+%   \midrule
+%   University Archives & |arch| \\
+%   Masaryk University & |base| \\
+%   Central European Institute of Technology & |ceitec| \\
+%   Cerit & |cerit| \\
+%   Technology Transfer Office & |ctt| \\
+%   Centre for International Cooperation & |czs| \\
+%   Faculty of Economics and Administration & |econ| \\
+%   Faculty of Informatics & |fi| \\
+%   Faculty of Sports Studies & |fsps| \\
+%   Faculty of Social Studies & |fss| \\
+%   Institute for Biostatistics and Analyses & |iba| \\
+%   Institute of Computer Science & |ics| \\
+%   Information System of Masaryk University & |is| \\
+%   Career Centre & |kariera| \\
+%   Language Centre & |lang| \\
+%   Faculty of Law & |law| \\
+%   Faculty of Medicine & |med| \\
+%   Mendel Museum & |muzeu| \\
+%   Faculty of Education & |ped| \\
+%   Faculty of Arts & |phil| \\
+%   Masaryk University Press & |press| \\
+%   Central Management Structure of the Ceitec Project & |ptceitec| \\
+%   Rector's Office & |rect| \\
+%   Faculty of Science & |sci| \\
+%   Accomodation and Catering Services & |skm| \\
+%   Support Centre for Students with Special Needs & |teiresias| \\
+%   Management of the University Campus at Bohunice & |ucb| \\
+%   University Center Telč & |uct| \\
+%   \bottomrule
+% \end{tabular}
+% \caption{The \meta{work places} recognized at the Masaryk University
+%   in Brno}
+% \label{table:workplaces}
+% \end{center}
+% \end{table}
+%    \begin{macrocode}
+\muletter@def{workplace}%
+\workplace{base}%
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
+%
+% \subsection{Filenames and Pathnames}
+% \begin{macro}{\muletter@pathname@base}
+% |\muletter@pathname@base| is the pathname of the base directory
+% containing logo, label either directly or in subdirectories.
+%    \begin{macrocode}
+\newcommand*\muletter@pathname@base{%
+  muletter/%
+}%
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\muletter@pathname@logo}
+% |\muletter@pathname@logo| is the pathname of the base directory
+% directly containing logo files.
+%    \begin{macrocode}
+\newcommand*\muletter@pathname@logo{%
+  \muletter@pathname@base logo/%
+}%
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\muletter@pathname@label}
+% |\muletter@pathname@label| is the pathname of the base directory
+% directly containing label files.
+%    \begin{macrocode}
+\newcommand*\muletter@pathname@label{%
+  \muletter@pathname@base label/%
+}%
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\muletter@pathname@locale}
+% |\muletter@pathname@locale| is the pathname of the base directory
+% containing locale files.
+%    \begin{macrocode}
+\newcommand*\muletter@pathname@locale{%
+  \muletter@pathname@base locale/%
+}%
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\muletter@filename@logo}
+% |\muletter@pathname@logo| is the filename of logo that will be
+% included in the header of the first page in a letter.
+%    \begin{macrocode}
+\newcommand*\muletter@filename@logo{%
+  \muletter@pathname@logo muletter-\muletter@data@workplace-%
+    \muletter@data@locale@logo
+    \ifx\undefined\muletter@option@monochrome
+      -color%
+    \fi
+}%
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\muletter@filename@logo@fallback}
+% |\muletter@pathname@logo@fallback| is the filename of logo that will
+% be included in the header of the first page in a letter if
+% |\muletter@pathname@logo| is not found.
+%    \begin{macrocode}
+\newcommand*\muletter@filename@logo@fallback{%
+  \muletter@pathname@logo muletter-\muletter@data@workplace-english%
+    \ifx\undefined\muletter@option@monochrome
+      -color%
+    \fi
+}%
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\muletter@filename@label}
+% |\muletter@pathname@label| is the filename of label that will be
+% included in the header of the first page in a letter.
+%    \begin{macrocode}
+\newcommand*\muletter@filename@label{%
+  \muletter@pathname@label muletter-\muletter@data@workplace-%
+    \muletter@data@locale@label
+    \ifx\undefined\muletter@option@monochrome
+      -color%
+    \fi
+}%
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\muletter@filename@label@fallback}
+% |\muletter@pathname@label@fallback| is the filename of label that will
+% be included in the header of the first page in a letter if
+% |\muletter@pathname@label| is not found.
+%    \begin{macrocode}
+\newcommand*\muletter@filename@label@fallback{%
+  \muletter@pathname@label muletter-\muletter@data@workplace-english%
+    \ifx\undefined\muletter@option@monochrome
+      -color%
+    \fi
+}%
+%    \end{macrocode}
+% \end{macro}
+%
+% \begin{macro}{\muletter@subroutine@includegraphics}
+% |\muletter@subroutine@includegraphics|\oarg{\texttt{\textbackslash
+% includegraphics} options}\marg{primary file name}\marg{fallback file
+% name} tries to include the graphics files \meta{primary file name} and
+% \meta{fallback file name} if \meta{primary file name} is not found. If
+% neither graphics file is found, nothing will be included.
+%    \begin{macrocode}
+\newcommand*\muletter@subroutine@includegraphics[3][]{%
+  \begingroup
+  \patchcmd{\Gin@ii}{\begingroup}{%
+    \begingroup
+    \renewcommand{\@latex@error}[2]{%
+      \ifx\undefined\filetter@temp@yield
+        \let\filetter@temp@yield\relax
+        \includegraphics[#1]{#3}%
+      \fi
+    }%
+  }{}{}%
+  \includegraphics[#1]{#2}
+  \endgroup
+}%
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{Counters}
+% |muletter@counter@letterno| is the number of the current letter.
+%    \begin{macrocode}
+\newcounter{muletter@counter@letterno}%
 %    \end{macrocode}
 %
 % \subsection{Colors}
-% |filetter@color@secondary| is the secondary text color.
+% |muletter@color@secondary| is the secondary text color.
 %    \begin{macrocode}
-\definecolor{filetter@color@secondary}{HTML}{1B458F}%
+\definecolor{muletter@color@secondary}{HTML}{1B458F}%
 %    \end{macrocode}
 %
 % \subsection{Locale Strings}
-% \begin{macro}{\filetter@string}
-% |\filetter@string|\marg{key} expands to
-% |\filetter@string@|\meta{locale}|@|\meta{key}, where \meta{locale} is
-% the value of the |\filetter@data@locale| macro.
+% \begin{macro}{\muletter@string}
+% |\muletter@string|\marg{key} expands to
+% |\muletter@string@|\meta{locale}|@|\meta{key}, where \meta{locale} is
+% the value of the |\muletter@data@locale| macro.
 %    \begin{macrocode}
-\newcommand\filetter@string[1]{%
+\newcommand\muletter@string[1]{%
 %    \end{macrocode}
-% If |\filetter@locale@|\meta{locale}|@loaded| is undefined, then load
-% the file
-% |\filetter|\texttt{\discretionary{@}{@}{@}}|pathname@locale|^^A
+% If |\muletter@locale@|\meta{locale}|@loaded| is undefined, then load
+% the locale file
+% |\muletter|\texttt{\discretionary{@}{@}{@}}|pathname@locale|^^A
 % \meta{locale}|.def| and define
-% |\filetter@locale@|\meta{locale}|@loaded|.
+% |\muletter@locale@|\meta{locale}|@loaded|.
 %    \begin{macrocode}
-  \expandafter\ifx\expandafter\relax\csname filetter@locale@%
-    \filetter@data@locale @loaded\endcsname
+  \expandafter\ifx\expandafter\relax\csname muletter@locale@%
+    \muletter@data@locale @loaded\endcsname
+      \expandafter\global\expandafter\let\csname muletter@locale@%
+        \muletter@data@locale @loaded\endcsname\@empty
       \makeatletter
-      \input\filetter@pathname@locale\filetter@data@locale.def\relax
-      \expandafter\let\csname filetter@locale@\filetter@data@locale
-        @loaded\endcsname\@empty
+      \input\muletter@pathname@locale\muletter@data@locale.def\relax
+      \makeatother
   \fi
 %    \end{macrocode}
-% If |\filetter@string@|\meta{locale}|@|\meta{key} is undefined, then
-% expand to |\filetter|\texttt{\discretionary{@}{@}{@}}^^A
+% If |\muletter@string@|\meta{locale}|@|\meta{key} is undefined, then
+% expand to |\muletter|\texttt{\discretionary{@}{@}{@}}^^A
 % |string@english@|\meta{key} instead.
 %    \begin{macrocode}
-  \expandafter\ifx\expandafter\relax\csname filetter@string@%
-    \filetter@data@locale @#1\endcsname\relax
-      \csname filetter@string@english@#1\endcsname
+  \expandafter\ifx\expandafter\relax\csname muletter@string@%
+    \muletter@data@locale @#1\endcsname\relax
+      \csname muletter@string@english@#1\endcsname
   \else
-    \csname filetter@string@\filetter@data@locale @#1\endcsname
+    \csname muletter@string@\muletter@data@locale @#1\endcsname
   \fi}%
 %    \end{macrocode}
 % \end{macro}
-% \textsf{Filetter} hardwires the English locale strings directly into
+% \textsf{Muletter} hardwires the English locale strings directly into
 % the document class file.
 %    \begin{macrocode}
-\let\filetter@locale@english@loaded\@empty
+\let\muletter@locale@english@loaded\@empty
 %    \end{macrocode}
 %
-% \begin{macro}{\filetter@string@english@telephone}
-% |\filetter@string@|\meta{locale}|@telephone| is the label displayed
+% \begin{macro}{\muletter@string@english@telephone}
+% |\muletter@string@|\meta{locale}|@telephone| is the label displayed
 % prior to the sender's telephone number in the footer of the first page
 % in a letter.
 %    \begin{macrocode}
-\def\filetter@string@english@telephone{T}%
+\newcommand*\muletter@string@english@telephone{T}%
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\filetter@string@english@email}
-% |\filetter@string@|\meta{locale}|@email| is the label displayed
+% \begin{macro}{\muletter@string@english@email}
+% |\muletter@string@|\meta{locale}|@email| is the label displayed
 % prior to the sender's e-mail address in the footer of the first page
 % in a letter.
 %    \begin{macrocode}
-\def\filetter@string@english@email{E}%
+\newcommand*\muletter@string@english@email{E}%
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\filetter@string@english@bank}
-% |\filetter@string@|\meta{locale}|@bank| is the label displayed
+% \begin{macro}{\muletter@string@english@bank}
+% |\muletter@string@|\meta{locale}|@bank| is the label displayed
 % prior to the name of the sender's bank in the footer of the first page
 % in a letter.
 %    \begin{macrocode}
-\def\filetter@string@english@bank{Bank account}%
+\newcommand*\muletter@string@english@bank{Bank account}%
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\filetter@string@english@account}
-% |\filetter@string@|\meta{locale}|@account| is the label displayed
+% \begin{macro}{\muletter@string@english@account}
+% |\muletter@string@|\meta{locale}|@account| is the label displayed
 % prior to the sender's bank account number in the footer of the first
 % page in a letter.
 %    \begin{macrocode}
-\def\filetter@string@english@account{Acc. No.:}%
+\newcommand*\muletter@string@english@account{Acc. No.:}%
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\filetter@string@english@tin}
-% |\filetter@string@|\meta{locale}|@tin| is the label displayed
+% \begin{macro}{\muletter@string@english@tin}
+% |\muletter@string@|\meta{locale}|@tin| is the label displayed
 % prior to the sender's taxpayer's identification number in the footer
 % of the first page in a letter.
 %    \begin{macrocode}
-\def\filetter@string@english@tin{TIN}%
+\newcommand*\muletter@string@english@tin{TIN}%
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\filetter@string@english@vatin}
-% |\filetter@string@|\meta{locale}|@vatin| is the label displayed
+% \begin{macro}{\muletter@string@english@vatin}
+% |\muletter@string@|\meta{locale}|@vatin| is the label displayed
 % prior to the sender's \textsc{vat} identification number in the footer
 % of the first page in a letter.
 %    \begin{macrocode}
-\def\filetter@string@english@vatin{VATIN}%
+\newcommand*\muletter@string@english@vatin{VATIN}%
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\filetter@string@afterfooter}
-% |\filetter@string@|\meta{locale}|@afterfooter| is the text displayed
+% \begin{macro}{\muletter@string@afterfooter}
+% |\muletter@string@|\meta{locale}|@afterfooter| is the text displayed
 % after the footer of the first page in a letter.
 %    \begin{macrocode}
-\def\filetter@string@english@afterfooter{%
+\newcommand*\muletter@string@english@afterfooter{%
   Please quote the Ref. No. in your reply.}%
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\filetter@string@yourletter}
-% |\filetter@string@|\meta{locale}|@yourletter| is the label displayed
+% \begin{macro}{\muletter@string@yourletter}
+% |\muletter@string@|\meta{locale}|@yourletter| is the label displayed
 % prior to the reference number and the sending date of the previous
 % letter in a conversation in the opening matter.
 %    \begin{macrocode}
-\def\filetter@string@english@yourletter{Your Letter (Ref. No. / Date)}%
+\newcommand*\muletter@string@english@yourletter{%
+  Your Letter (Ref. No. / Date)}%
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\filetter@string@refno}
-% |\filetter@string@|\meta{locale}|@refno| is the label displayed prior
+% \begin{macro}{\muletter@string@refno}
+% |\muletter@string@|\meta{locale}|@refno| is the label displayed prior
 % to the reference number of a letter in the opening matter.
 %    \begin{macrocode}
-\def\filetter@string@english@refno{Reference Number}%
+\newcommand*\muletter@string@english@refno{Reference Number}%
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\filetter@string@contactinfo}
-% |\filetter@string@|\meta{locale}|@contactinfo| is the label displayed prior
+% \begin{macro}{\muletter@string@contactinfo}
+% |\muletter@string@|\meta{locale}|@contactinfo| is the label displayed prior
 % to the sender's signature and personal e-mail in the opening matter.
 %    \begin{macrocode}
-\def\filetter@string@english@contactinfo{Contact / E-mail}%
+\newcommand*\muletter@string@english@contactinfo{Contact / E-mail}%
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\filetter@string@placedate}
-% |\filetter@string@|\meta{locale}|@placedate| is the label displayed prior
+% \begin{macro}{\muletter@string@placedate}
+% |\muletter@string@|\meta{locale}|@placedate| is the label displayed prior
 % to the sending date and the place from which a letter is being sent in
 % the opening matter.
 %    \begin{macrocode}
-\def\filetter@string@english@placedate{Place / Date}%
+\newcommand*\muletter@string@english@placedate{Place / Date}%
 %    \end{macrocode}
 % \end{macro}
 % \iffalse
