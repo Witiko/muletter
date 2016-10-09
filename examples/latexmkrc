@@ -1,0 +1,3 @@
+# Produce a PDF file.
+$pdf_mode = 1;
+$dvi_mode = 0;
