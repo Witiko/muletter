@@ -94,6 +94,7 @@
 % \end{abstract}
 %
 % \tableofcontents
+% \listoftables
 %
 % \section{Basic Usage}
 % To use \textsf{muletter}, specify
@@ -338,18 +339,24 @@
 %    \end{macrocode}
 % We typeset sender information.
 %    \begin{macrocode}
-      \begin{tabular}{@{}p{\muletter@length@labeloverhang}@{}l@{}}
-        & \scriptsize\selectfont\textbf{%
-            \ignorespaces\muletter@data@name
-          }\\[1em]
-        & \muletter@data@address \\
-        & \muletter@string{telephone}: \muletter@data@telephone,
-          \muletter@string{email}: \muletter@data@email,
-          \muletter@data@webpage \\
-        & \muletter@string{bank}: \muletter@data@bank,
-          \muletter@string{account}: \muletter@data@account,
-          \muletter@string{tin}: \muletter@data@tin,
-          \muletter@string{vatin}: \muletter@data@vatin \\
+      \settowidth\muletter@temp@length{%
+        \muletter@subroutine@includegraphics
+          {\muletter@filename@logo}%
+          {\muletter@filename@logo@fallback}%
+      }%
+      \begin{tabular}{@{}p{\muletter@length@labeloverhang}@{}%
+        p{\dimexpr(\textwidth - \muletter@temp@length)}@{}}
+          & \scriptsize\selectfont\textbf{%
+              \ignorespaces\muletter@data@name
+            }\\[1em]
+          & \muletter@data@address \\
+          & \muletter@string{telephone}: \muletter@data@telephone,
+            \muletter@string{email}: \muletter@data@email,
+            \muletter@data@webpage \\
+          & \muletter@string{bank}: \muletter@data@bank,
+            \muletter@string{account}: \muletter@data@account,
+            \muletter@string{tin}: \muletter@data@tin,
+            \muletter@string{vatin}: \muletter@data@vatin \\
 %    \end{macrocode}
 % We typeset the current page number and the number of pages of the
 % current letter.
@@ -360,11 +367,6 @@
 %    \end{macrocode}
 % We typeset a logo.
 %    \begin{macrocode}
-      \settowidth\muletter@temp@length{%
-        \muletter@subroutine@includegraphics
-          {\muletter@filename@logo}%
-          {\muletter@filename@logo@fallback}%
-      }%
       \hfill\begin{minipage}[c]\muletter@temp@length
         \muletter@subroutine@includegraphics
           {\muletter@filename@logo}%
@@ -412,7 +414,7 @@
 % Page styles other than |firstpage| and |plain| are unsupported in
 % \textsf{muletter} by default.
 % 
-% \section{Available Commands}\label{sec:markup}
+% \section{Available Commands}
 % \subsection{Document Markup}
 % \begin{environment}{letter}
 % |\begin{letter}|\marg{destination address} \ldots|\end{letter}| is a
@@ -631,7 +633,7 @@
 % \end{macro}
 % \end{macro}
 % 
-% \subsubsection{Additional Commands}
+% \subsubsection{Additional Commands}\label{sec:markup:extra}
 % The following commands are new \textsf{muletter} additions. We will
 % define them using |\muletter@def| with |\muletter@def@command| defined
 % as |\newcommand|.
