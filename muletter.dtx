@@ -69,15 +69,7 @@
 %</driver>
 %    \end{macrocode}
 %<*class>
-\NeedsTeXFormat{LaTeX2e}
-%
-% Define `\muletter@version` and store it in the `VERSION.tex` file \fi
-{\def\muletter@versiondef#1#2{
-  \gdef\muletter@version@number{#1}
-  \gdef\muletter@version@date{#2}
-  \gdef\muletter@version{#2 #1 muletter MU letter theme}}
-\muletter@versiondef{v0.0.1}{2016/10/08}}
-% {\newwrite\f\openout\f=VERSION\write\f{\muletter@version}\closeout\f}
+% \fi
 %
 % \title{The document class for the typesetting of letters at the Masaryk
 %   University in Brno}
@@ -92,6 +84,11 @@
 % for anyone who wishes to extend and modify the class as well as
 % information on the basic usage for the ordinary user.
 % \end{abstract}
+%
+%    \begin{macrocode}
+\NeedsTeXFormat{LaTeX2e}%
+\ProvidesClass{muletter}[2016/10/10]%
+%    \end{macrocode}
 %
 % \tableofcontents
 % \listoftables
@@ -118,7 +115,6 @@
 % \textsf{Muletter} requires the \LaTeX{} \textsf{letter}
 % class~\cite{lamport16}, which it loads and extends.
 %    \begin{macrocode}
-\ProvidesClass{muletter}[\muletter@version]%
 \LoadClass[a4paper,11pt,oneside,onecolumn,final]{letter}%
 %    \end{macrocode}
 %
