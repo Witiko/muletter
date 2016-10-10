@@ -27,7 +27,6 @@
 \usepackage[utf8]{inputenc} % this file uses UTF-8
 \usepackage[english]{babel}
 \usepackage{tgpagella}
-\usepackage{tabularx}
 \usepackage{hologo}
 \usepackage{booktabs}
 \usepackage[scaled=0.86]{berasans}
@@ -138,8 +137,7 @@
 \RequirePackage{etoolbox}%
 %    \end{macrocode}
 % Based on the class options, we may also require the \textsf{cmap},
-% \textsf{fontenc}, and \textsf{times} packages to set the default font
-% faces.
+% \textsf{fontenc}, \textsf{newtxtext}, and \textsf{microtype} packages.
 % 
 % \section{Class Options}\label{sec:clsoptions}
 % \subsection{Defining the Options}
@@ -179,13 +177,16 @@
 %    \end{macrocode}
 %
 % If the |times| option has been specified, we load the \textsf{cmap},
-% \textsf{fontenc}, and \textsf{times} to set the serif, sans-serif, and
-% monospace font faces to Times, Helvetica, and TXTT, respectively.
+% \textsf{fontenc}, \textsf{newtxtext} packages to set the serif,
+% sans-serif, and monospace font faces to Times, Helvetica, and TXTT,
+% respectively. We also load the \textsf{microtype} package to enable
+% the microtypographical extensions, if the \TeX{} engine provides any.
 %    \begin{macrocode}
 \ifx\undefined\muletter@option@times\else
   \RequirePackage[resetfonts]{cmap}%
   \RequirePackage[T1]{fontenc}%
-  \RequirePackage{times}%
+  \RequirePackage{newtxtext}%
+  \RequirePackage{microtype}%
 \fi
 %    \end{macrocode}
 %
@@ -200,7 +201,7 @@
 % \begin{macro}{\parskip}
 % |\parskip| specifies the extraneous vertical space between paragraphs.
 %    \begin{macrocode}
-\setlength\parskip{0.8cm}
+\parskip=0.8cm
 %    \end{macrocode}
 % \end{macro}
 % \subsection{Page Layout}
@@ -338,7 +339,9 @@
 % We typeset sender information.
 %    \begin{macrocode}
       \begin{tabular}{@{}p{\muletter@length@labeloverhang}@{}l@{}}
-        & \scriptsize\selectfont\textbf{\muletter@data@name} \\[1em]
+        & \scriptsize\selectfont\textbf{%
+            \ignorespaces\muletter@data@name
+          }\\[1em]
         & \muletter@data@address \\
         & \muletter@string{telephone}: \muletter@data@telephone,
           \muletter@string{email}: \muletter@data@email,
@@ -479,10 +482,13 @@
         \muletter@string{contactinfo}:} &
       \textcolor{muletter@color@secondary}{%
         \muletter@string{placedate}} \\
-    \muletter@data@refno@received\newline\muletter@data@date@received &
-    \muletter@data@refno &
-    \muletter@data@signature\newline\muletter@data@email@personal &
-    \muletter@data@place\newline\muletter@data@date 
+    \mbox{\muletter@data@refno@received}\newline
+    \mbox{\muletter@data@date@received} &
+    \mbox{\muletter@data@refno} &
+    \mbox{\muletter@data@name@contact}\newline
+    \mbox{\muletter@data@email@contact} &
+    \mbox{\muletter@data@place}\newline
+    \mbox{\muletter@data@date}
   \end{tabular}}\par
   \vspace\parskip
 %    \end{macrocode}
@@ -632,6 +638,16 @@
 %    \begin{macrocode}
 \let\muletter@def@command\newcommand
 %    \end{macrocode}
+% \begin{macro}{\contactname}
+% \begin{macro}{\muletter@data@name@contact}
+% |\contactname|\marg{sender name} defines |\muletter@data@name@contact|
+% as \meta{sender name}, where \meta{sender name} corresponds to the
+% contact person's name that will be displayed in the opening matter.
+%    \begin{macrocode}
+\muletter@def[name@contact]{contactname}%
+%    \end{macrocode}
+% \end{macro}
+% \end{macro}
 % \begin{macro}{\subject}
 % \begin{macro}{\muletter@data@subject}
 % |\subject|\marg{subject} defines |\muletter@data@subject| as
@@ -653,14 +669,14 @@
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
-% \begin{macro}{\personalemail}
-% \begin{macro}{\muletter@data@email@personal}
-% |\personalemail|\marg{e-mail address} defines
-% |\muletter@data@email@personal| as \meta{e-mail address}, where
-% \meta{e-mail address} corresponds to the sender's personal e-mail
+% \begin{macro}{\contactemail}
+% \begin{macro}{\muletter@data@email@contact}
+% |\contactemail|\marg{e-mail address} defines
+% |\muletter@data@email@contact| as \meta{e-mail address}, where
+% \meta{e-mail address} corresponds to the contact person's e-mail
 % address that will be displayed in the opening matter.
 %    \begin{macrocode}
-\muletter@def[email@personal]{personalemail}%
+\muletter@def[email@contact]{contactemail}%
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
@@ -807,8 +823,9 @@
 }%
 %    \end{macrocode}
 % We define |\muletter@data@locale@logo| as the locale for logos and
-% |\muletter@data@locale@label| as the locale for labels. Both will
-% inherit the value of |\muletter@data@locale|.
+% |\muletter|\texttt{\discretionary{@}{@}{@}}|data@locale@label| as the
+% locale for labels. Both will inherit the value of
+% |\muletter@data@locale|.
 %    \begin{macrocode}
 \newcommand*\muletter@data@locale@logo{%
   \muletter@data@locale

@@ -11,4 +11,4 @@ shopt -s nullglob
   s#.*/(.*)/.*/[^_]*_(logo|znak|pecet)-cmyk_cz\.pdf$#muletter-$1-czech-color.pdf#;
   s#.*/(.*)/.*/[^_]*_(logo|znak|pecet)-cb_en\.pdf$#muletter-$1-english.pdf#;
   s#.*/(.*)/.*/[^_]*_(logo|znak|pecet)-cmyk_en\.pdf$#muletter-$1-english-color.pdf#;' \
-  /media/*/gdrive/MU-JVS-AKTUALIZACE2015/*/*/{znaky/!(mu)_znak-{cb,cmyk,cmyk-modra}{,_{cz,en}},loga/!(mu)_{logo,pecet}-{cb,cmyk}{,_{cz,en}}}.pdf 
+  /media/*/gdrive/MU-JVS-AKTUALIZACE2015/*/*/{znaky/!(mu)_znak-{cb,cmyk,cmyk-modra}{,_{cz,en}},loga/!(mu|cerit-sp)_{logo,pecet}-{cb,cmyk}{,_{cz,en}}}.pdf 
