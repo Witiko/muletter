@@ -6,9 +6,10 @@ subject to the LaTeX Project Public License.
 
 # Installation #
 
-To install the package, interpret the file `muletter.ins` using a TeX
-engine (`tex muletter.ins`). This should produce the file
-`muletter.cls`.
+To install the package, interpret the file `muletter.ins` using a
+Unicode-aware TeX engine (`tex muletter.ins`), such as XeTeX
+(`xetex muletter.ins`) or LuaTeX (`luatex muletter.ins`). This should
+produce the file `muletter.cls`.
 
 ## Local installation ##
 
