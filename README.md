@@ -33,6 +33,6 @@ For further information, consult the package documentation, which can be
 typeset by running the [LaTeXMK][LaTeXMK] tool on the `muletter.dtx` file
 (`latexmk muletter.dtx`). [LaTeXMK][LaTeXMK] should be included in your
 TeX distribution. The typeset documentation will reside in the file
-`markdown.pdf`.
+`muletter.pdf`.
 
  [LaTeXMK]: https://www.ctan.org/pkg/latexmk/
