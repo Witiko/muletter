@@ -1032,18 +1032,20 @@
 %    \begin{macrocode}
 \newcommand\muletter@string[1]{%
 %    \end{macrocode}
-% If |\muletter@locale@|\meta{locale}|@loaded| is undefined, then load
+% If |\muletter@locale@|\meta{locale}|@loaded| is undefined, load
 % the locale file
-% |\muletter|\texttt{\discretionary{@}{@}{@}}|pathname@locale|^^A
-% \meta{locale}|.def| and define
-% |\muletter@locale@|\meta{locale}|@loaded|.
+% |\muletter|\texttt{\discretionary{@}{@}{@}}|pathname@locale|
+% |muletter-|\meta{locale}|.def| and define
+% |\muletterlocale@|\meta{locale}\texttt{\discretionary{@}{@}{@}}^^A
+% |loaded|.
 %    \begin{macrocode}
   \expandafter\ifx\expandafter\relax\csname muletter@locale@%
     \muletter@data@locale @loaded\endcsname
       \expandafter\global\expandafter\let\csname muletter@locale@%
         \muletter@data@locale @loaded\endcsname\@empty
       \makeatletter
-      \input\muletter@pathname@locale\muletter@data@locale.def\relax
+      \input\muletter@pathname@locale
+        muletter-\muletter@data@locale .def\relax
       \makeatother
   \fi
 %    \end{macrocode}
