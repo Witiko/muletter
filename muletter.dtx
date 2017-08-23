@@ -87,7 +87,7 @@
 %
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}%
-\ProvidesClass{muletter}[2016/10/10]%
+\ProvidesClass{muletter}[2017/08/23]%
 %    \end{macrocode}
 %
 % \tableofcontents
@@ -803,16 +803,18 @@
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
-% \begin{macro}{\locale}
+% \begin{macro}{\localename}
+% \changes{2017/08/23}{2017/08/23}{\cs{locale} was changed to \cs{localename},
+%   since the \textsf{babel} package reserves \cs{locale} now.}
 % \begin{macro}{\muletter@data@locale}
-% |\locale|\marg{locale name} defines
-% |\muletter@data@locale| as \meta{locale}, where \meta{locale}
+% |\localename|\marg{locale name} defines
+% |\muletter@data@locale| as \meta{locale name}, where \meta{locale name}
 % corresponds to the locale of a letter. The default value is
 % either |\languagename| defined by the packages of \textsf{babel} and
 % \textsf{polyglossia}, or |english|, when |\languagename| is undefined.
 %    \begin{macrocode}
-\muletter@def{locale}%
-\locale{%
+\muletter@def[locale]{localename}%
+\localename{%
   \ifx\languagename\undefined
     english%
   \else
