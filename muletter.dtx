@@ -87,7 +87,7 @@
 %
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}%
-\ProvidesClass{muletter}[2017/08/23]%
+\ProvidesClass{muletter}[2017/08/25]%
 %    \end{macrocode}
 %
 % \tableofcontents
@@ -996,14 +996,16 @@
 % name} tries to include the graphics files \meta{primary file name} and
 % \meta{fallback file name} if \meta{primary file name} is not found. If
 % neither graphics file is found, nothing will be included.
+% \changes{2017/08/25}{2017/08/25}{\cs{filetter@temp@yield} was renamed to
+%   \cs{muletter@temp@yield} for naming consistency.}
 %    \begin{macrocode}
 \newcommand*\muletter@subroutine@includegraphics[3][]{%
   \begingroup
   \patchcmd{\Gin@ii}{\begingroup}{%
     \begingroup
     \renewcommand{\@latex@error}[2]{%
-      \ifx\undefined\filetter@temp@yield
-        \let\filetter@temp@yield\relax
+      \ifx\undefined\muletter@temp@yield
+        \let\muletter@temp@yield\relax
         \includegraphics[#1]{#3}%
       \fi
     }%
