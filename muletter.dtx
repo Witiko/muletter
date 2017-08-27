@@ -71,7 +71,7 @@
 %<*class>
 % \fi
 %
-% \title{The document class for the typesetting of letters at the Masaryk
+% \title{A document class for the typesetting of letters at the Masaryk
 %   University in Brno}
 % \author{Vít Novotný}
 % \date{\today}
@@ -92,17 +92,6 @@
 %
 % \tableofcontents
 % \listoftables
-%
-% \section{Basic Usage}
-% To use \textsf{muletter}, specify
-% |\documentclass|\oarg{options}|{muletter}| at the beginning of your
-% \LaTeX{} document; the available \meta{options} are documented in
-% section \ref{sec:clsoptions}. Inside your document, you can use the
-% standard markup provided by the \LaTeX{} \textsf{letter}
-% class~\cite{lamport16} as well as the additional \textsf{muletter}
-% markup specified in section \ref{sec:markup:extra}. To get started
-% quickly, inspect the example files distributed alongside
-% \textsf{muletter}.
 %
 % \section{Requirements}
 % \subsection{Required \TeX{} Engine}
@@ -135,6 +124,17 @@
 %    \end{macrocode}
 % Based on the class options, we may also require the \textsf{cmap},
 % \textsf{fontenc}, \textsf{newtxtext}, and \textsf{microtype} packages.
+%
+% \section{Basic Usage}
+% To use \textsf{muletter}, specify
+% |\documentclass|\oarg{options}|{muletter}| at the beginning of your
+% \LaTeX{} document; the available \meta{options} are documented in
+% section \ref{sec:clsoptions}. Inside your document, you can use the
+% standard markup provided by the \LaTeX{} \textsf{letter}
+% class~\cite{lamport16} as well as the additional \textsf{muletter}
+% markup specified in section \ref{sec:markup:extra}. To get started
+% quickly, inspect the example files distributed alongside
+% \textsf{muletter}.
 % 
 % \section{Class Options}\label{sec:clsoptions}
 % \subsection{Defining the Options}
@@ -700,8 +700,8 @@
 %    \end{macrocode}
 % \end{macro}
 % \end{macro}
-% \begin{macro}{\bank}
-% \begin{macro}{\muletter@data@bank}
+% \begin{macro}{\account}
+% \begin{macro}{\muletter@data@account}
 % |\account|\marg{account number} defines |\muletter@data@account| as
 % \meta{account number}, where \meta{account number} corresponds to the
 % sender's bank account number that will be displayed along with the
@@ -935,7 +935,7 @@
 % \end{macro}
 %
 % \begin{macro}{\muletter@filename@logo}
-% |\muletter@pathname@logo| is the filename of logo that will be
+% |\muletter@filename@logo| is the filename of logo that will be
 % included in the header of the first page in a letter.
 %    \begin{macrocode}
 \newcommand*\muletter@filename@logo{%
@@ -949,9 +949,9 @@
 % \end{macro}
 %
 % \begin{macro}{\muletter@filename@logo@fallback}
-% |\muletter@pathname@logo@fallback| is the filename of logo that will
+% |\muletter@filename@logo@fallback| is the filename of logo that will
 % be included in the header of the first page in a letter if
-% |\muletter@pathname@logo| is not found.
+% |\muletter@filename@logo| is not found.
 %    \begin{macrocode}
 \newcommand*\muletter@filename@logo@fallback{%
   \muletter@pathname@logo muletter-\muletter@data@workplace-english%
@@ -963,7 +963,7 @@
 % \end{macro}
 %
 % \begin{macro}{\muletter@filename@label}
-% |\muletter@pathname@label| is the filename of label that will be
+% |\muletter@filename@label| is the filename of label that will be
 % included in the header of the first page in a letter.
 %    \begin{macrocode}
 \newcommand*\muletter@filename@label{%
@@ -977,9 +977,9 @@
 % \end{macro}
 %
 % \begin{macro}{\muletter@filename@label@fallback}
-% |\muletter@pathname@label@fallback| is the filename of label that will
+% |\muletter@filename@label@fallback| is the filename of label that will
 % be included in the header of the first page in a letter if
-% |\muletter@pathname@label| is not found.
+% |\muletter@filename@label| is not found.
 %    \begin{macrocode}
 \newcommand*\muletter@filename@label@fallback{%
   \muletter@pathname@label muletter-\muletter@data@workplace-english%
