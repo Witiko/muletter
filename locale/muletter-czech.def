@@ -17,7 +17,7 @@
   DI\v{C}%
 }%
 \gdef\muletter@string@czech@afterfooter{%
-  V~odpov\v{e}di pros\'im uv\'ad\v{e}jte na\v{s}e \v{c}\'islo
+  V~odpov\v{e}di, pros\'im, uv\'ad\v{e}jte na\v{s}e \v{c}\'islo
   jednac\'i.%
 }%
 \gdef\muletter@string@czech@yourletter{%
