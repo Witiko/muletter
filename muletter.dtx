@@ -123,7 +123,7 @@
 \RequirePackage{etoolbox}%
 %    \end{macrocode}
 % Based on the class options, we may also require the \textsf{cmap},
-% \textsf{fontenc}, \textsf{newtxtext}, and \textsf{microtype} packages.
+% \textsf{fontenc}, \textsf{tgheros}, and \textsf{microtype} packages.
 %
 % \section{Basic Usage}
 % To use \textsf{muletter}, specify
@@ -138,15 +138,15 @@
 % 
 % \section{Class Options}\label{sec:clsoptions}
 % \subsection{Defining the Options}
-% \begin{macro}{\muletter@option@times}
-% The |times| class option defines |\muletter@option@times| and the
+% \begin{macro}{\muletter@option@heros}
+% The |heros| class option defines |\muletter@option@heros| and the
 % |nofonts| class option undefines it.
 %    \begin{macrocode}
-\DeclareOption{times}{%
-  \let\muletter@option@times\relax
+\DeclareOption{heros}{%
+  \let\muletter@option@heros\relax
 }%
 \DeclareOption{nofonts}{%
-  \let\muletter@option@times\undefined
+  \let\muletter@option@heros\undefined
 }%
 %    \end{macrocode}
 % \end{macro}
@@ -164,25 +164,26 @@
 % \end{macro}
 %
 % \subsection{Processing the Options}
-% We will use the |times| and |color| options by default.
+% We will use the |heros| and |color| options by default.
 %    \begin{macrocode}
-\ExecuteOptions{times, color}%
+\ExecuteOptions{heros, color}%
 %    \end{macrocode}
 % We process the options.
 %    \begin{macrocode}
 \ProcessOptions
 %    \end{macrocode}
 %
-% If the |times| option has been specified, we load the \textsf{cmap},
-% \textsf{fontenc}, \textsf{newtxtext} packages to set the serif,
-% sans-serif, and monospace font faces to Times, Helvetica, and TXTT,
-% respectively. We also load the \textsf{microtype} package to enable
-% the microtypographical extensions, if the \TeX{} engine provides any.
+% If the |heros| option has been specified, we load the \textsf{cmap},
+% \textsf{fontenc}, \textsf{tgheros} packages to set the default font
+% face to \TeX{} Gyre Heros. We also load the \textsf{microtype} package
+% to enable the microtypographical extensions, if the \TeX{} engine
+% provides any.
 %    \begin{macrocode}
-\ifx\undefined\muletter@option@times\else
+\ifx\undefined\muletter@option@heros\else
   \RequirePackage[resetfonts]{cmap}%
   \RequirePackage[T1]{fontenc}%
-  \RequirePackage{newtxtext}%
+  \RequirePackage{tgheros}%
+  \renewcommand{\familydefault}{\sfdefault}
   \RequirePackage{microtype}%
 \fi
 %    \end{macrocode}
