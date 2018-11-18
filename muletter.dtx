@@ -87,7 +87,7 @@
 %
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}%
-\ProvidesClass{muletter}[2017/08/25]%
+\ProvidesClass{muletter}[2018/11/18]%
 %    \end{macrocode}
 %
 % \tableofcontents
@@ -104,7 +104,7 @@
 % \textsf{Muletter} requires the \LaTeX{} \textsf{letter}
 % class~\cite{lamport16}, which it loads and extends.
 %    \begin{macrocode}
-\LoadClass[a4paper,11pt,oneside,onecolumn,final]{letter}%
+\LoadClass[a4paper,10pt,oneside,onecolumn,final]{letter}%
 %    \end{macrocode}
 %
 % \subsection{Required Packages}
@@ -121,6 +121,10 @@
 % |\includegraphics| command.
 %    \begin{macrocode}
 \RequirePackage{etoolbox}%
+%    \end{macrocode}
+% The \textsf{tikz} package is used to display a background image.
+%    \begin{macrocode}
+  \RequirePackage{tikz}%
 %    \end{macrocode}
 % Based on the class options, we may also require the \textsf{cmap},
 % \textsf{fontenc}, \textsf{tgheros}, and \textsf{microtype} packages.
@@ -199,7 +203,21 @@
 % \begin{macro}{\parskip}
 % |\parskip| specifies the extraneous vertical space between paragraphs.
 %    \begin{macrocode}
-\parskip=0.8cm
+\parskip=14pt
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\normalsize}
+% |\normalsize| specifies that the font size should be 10\,pt with
+% 14\,pt of leading.
+%    \begin{macrocode}
+\renewcommand\normalsize{%
+  \@setfontsize\normalsize\@xpt\@xivpt
+  \abovedisplayskip 10\p@ \@plus2\p@ \@minus5\p@
+  \abovedisplayshortskip \z@ \@plus3\p@
+  \belowdisplayshortskip 6\p@ \@plus3\p@ \@minus3\p@
+  \belowdisplayskip \abovedisplayskip
+  \let\@listi\@listI}
+\normalsize
 %    \end{macrocode}
 % \end{macro}
 % \subsection{Page Layout}
@@ -208,7 +226,7 @@
 % |\voffset| is the vertical distance between the top of the paper and
 % the bottom of the top margin minus one inch.
 %    \begin{macrocode}
-\voffset=\dimexpr(-1in + 1.25cm)
+\voffset=\dimexpr(-1in + 1.1cm)
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\topmargin}
@@ -221,7 +239,7 @@
 % \begin{macro}{\headheight}
 % |\headheight| is the height of the box that will contain the header.
 %    \begin{macrocode}
-\headheight=3.25cm
+\headheight=2cm
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\headsep}
@@ -231,11 +249,35 @@
 \headsep=0pt
 %    \end{macrocode}
 % \end{macro}
+% \begin{macro}{\muletter@length@address@top@padding}
+% |\muletter@length@address@top@padding| is the vertical distance between
+% the label and the address.
+%    \begin{macrocode}
+\newlength\muletter@length@address@top@padding
+\muletter@length@address@top@padding=-1.7cm
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\muletter@length@metadata@top@padding}
+% |\muletter@length@metadata@top@padding| is the vertical distance between
+% the address and the metadata of a letter.
+%    \begin{macrocode}
+\newlength\muletter@length@metadata@top@padding
+\muletter@length@metadata@top@padding=42pt
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\muletter@length@opening@top@padding}
+% |\muletter@length@opening@top@padding| is the vertical distance between
+% the metadata and the opening of a letter.
+%    \begin{macrocode}
+\newlength\muletter@length@opening@top@padding
+\muletter@length@opening@top@padding=36pt
+%    \end{macrocode}
+% \end{macro}
 % \begin{macro}{\textheight}
 % |\textheight| is the height of text block (including footnotes and
 % figures, excluding header and footer).
 %    \begin{macrocode}
-\textheight=20.75cm
+\textheight=21.8cm
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\footskip}
@@ -251,7 +293,7 @@
 % |\hoffset| is the horizontal distance between the left side of the
 % paper and the left side of the text block.
 %    \begin{macrocode}
-\hoffset=\dimexpr(-1in + 3cm)
+\hoffset=\dimexpr(-1in + 2.4cm)
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\oddsidemargin}
@@ -264,11 +306,11 @@
 % \begin{macro}{\textwidth}
 % |\textwidth| is the width of the text block.
 %    \begin{macrocode}
-\textwidth=15cm
+\textwidth=16.2cm
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\marginparsep}
-% |\marginparsep| is the vertical distance between the left side of the
+% |\marginparsep| is the horizontal distance between the left side of the
 % text block and the right side of the margin notes.
 %    \begin{macrocode}
 \marginparsep=0pt
@@ -280,13 +322,22 @@
 \marginparwidth=0pt
 %    \end{macrocode}
 % \end{macro}
-% \begin{macro}{\muletter@length@labeloverhang}
-% |\muletter@length@labeloverhang| is the vertical distance between the
+% \begin{macro}{\muletter@length@label@overhang}
+% |\muletter@length@label@overhang| is the horizontal distance between the
 % left side of the label in the head of the first page in a letter and
 % the left side of the text block.
 %    \begin{macrocode}
-\newlength\muletter@length@labeloverhang
-\muletter@length@labeloverhang=15.5mm
+\newlength\muletter@length@label@overhang
+\muletter@length@label@overhang=1.2cm
+%    \end{macrocode}
+% \end{macro}
+% \begin{macro}{\muletter@length@label@left@margin}
+% |\muletter@length@label@left@margin| is the horizontal distance between
+% the left side of the label and the left side of the image containing
+% the label.
+%    \begin{macrocode}
+\newlength\muletter@length@label@left@margin
+\muletter@length@label@left@margin=0.5cm
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\longindentation}
@@ -312,13 +363,24 @@
 %    \begin{macrocode}
 \renewcommand\ps@firstpage{%
 %    \end{macrocode}
+% We display the background image on the first page.
+%    \begin{macrocode}
+  \begin{tikzpicture}[overlay, remember picture]
+    \node[anchor=north west, yshift=-\voffset, inner sep=0pt]
+      at (current page.north west) {%
+        \includegraphics\muletter@filename@background
+    };
+  \end{tikzpicture}
+%    \end{macrocode}
 % \begin{macro}{\@oddhead}
-% |\@oddhead| is the document header. It contains a logo in the
+% |\@oddhead| is the document header. It contains a label in the
 % |firstpage| page style.
 %    \begin{macrocode}
   \def\@oddhead{%
-    \hspace{-\muletter@length@labeloverhang}%
+    \hspace{-\muletter@length@label@overhang}%
+    \hspace{-\muletter@length@label@left@margin}%
     \muletter@subroutine@includegraphics
+      [height=\headheight]%
       {\muletter@filename@label}%
       {\muletter@filename@label@fallback}%
   }%
@@ -329,10 +391,10 @@
 % with sender information and a logo in the |firstpage| page style.
 %    \begin{macrocode}
   \def\@oddfoot{%
-    \sffamily\fontsize{7}{9}\selectfont
-    \color{muletter@color@secondary}\vspace{1.75cm}%
+    \sffamily\fontsize{8}{12}\selectfont
+    \vspace{1.75cm}%
     \begin{minipage}[b][\dimexpr(\footskip-1.75cm)][c]\textwidth
-      \hspace{-\muletter@length@labeloverhang}%
+      \hspace{-\muletter@length@label@overhang}%
 %    \end{macrocode}
 % We typeset sender information.
 %    \begin{macrocode}
@@ -341,25 +403,37 @@
           {\muletter@filename@logo}%
           {\muletter@filename@logo@fallback}%
       }%
-      \begin{tabular}{@{}p{\muletter@length@labeloverhang}@{}%
+      \begin{tabular}{@{}p{\muletter@length@label@overhang}@{}%
         p{\dimexpr(\textwidth - \muletter@temp@length)}@{}}
-          & \scriptsize\selectfont\textbf{%
-              \ignorespaces\muletter@data@name
-            }\\[1em]
-          & \muletter@data@address \\
-          & \muletter@string{telephone}: \muletter@data@telephone,
-            \muletter@string{email}: \muletter@data@email,
-            \muletter@data@webpage \\
-          & \muletter@string{bank}: \muletter@data@bank,
-            \muletter@string{account}: \muletter@data@account,
-            \muletter@string{tin}: \muletter@data@tin,
-            \muletter@string{vatin}: \muletter@data@vatin \\
+          & \textcolor{muletter@color@secondary}{%
+              \textbf{%
+                \ignorespaces\muletter@data@name
+              }%
+            }\\
+          & \\
+          & \textcolor{muletter@color@secondary}{%
+              \muletter@data@address
+            }\\
+          & \textcolor{muletter@color@secondary}{%
+              \muletter@string{telephone}: \muletter@data@telephone,
+              \muletter@string{email}: \muletter@data@email,
+              \muletter@data@webpage
+            }\\
+          & \textcolor{muletter@color@secondary}{%
+              \muletter@string{bank}: \muletter@data@bank,
+              \muletter@string{account}: \muletter@data@account,
+              \muletter@string{tin}: \muletter@data@tin,
+              \muletter@string{vatin}: \muletter@data@vatin
+            }\\
 %    \end{macrocode}
 % We typeset the current page number and the number of pages of the
 % current letter.
 %    \begin{macrocode}
         \thepage/\pageref{muletter@lastpage@letter%
-          \themuletter@counter@letterno} & \muletter@string{afterfooter}
+          \themuletter@counter@letterno} & 
+          \textcolor{muletter@color@secondary}{%
+            \muletter@string{afterfooter}%
+          }
       \end{tabular}%
 %    \end{macrocode}
 % We typeset a logo.
@@ -395,7 +469,7 @@
 %    \begin{macrocode}
   \def\@oddfoot{\sffamily\fontsize{7}{9}\selectfont
     \color{muletter@color@secondary}%
-    \hspace{-\muletter@length@labeloverhang}%
+    \hspace{-\muletter@length@label@overhang}%
     \thepage/\pageref{muletter@lastpage@letter%
       \themuletter@counter@letterno}%
   }%
@@ -424,7 +498,7 @@
 %    \begin{macrocode}
 \let\muletter@original@letter\letter
 \renewcommand\letter[1]{%
-  \muletter@original@letter{\bfseries\ignorespaces #1}%
+  \muletter@original@letter{#1}%
   \stepcounter{muletter@counter@letterno}%
 }%
 %    \end{macrocode}
@@ -460,19 +534,24 @@
 %    \end{macrocode}
 % We typeset the destination address.
 %    \begin{macrocode}
-  \hfill\begin{minipage}{.45\textwidth}%
-    \toname \\ \toaddress
-  \end{minipage}\par
-  \vspace\parskip
+  \vspace*\muletter@length@address@top@padding
+  \leavevmode\hfill
+  {%
+    \bfseries\fontsize{11}{14.5}\selectfont
+    \begin{minipage}{.45\textwidth}%
+      \toname \\ \toaddress
+    \end{minipage}%
+  }%
+  \\[\muletter@length@metadata@top@padding]
 %    \end{macrocode}
 % We typeset a row of additional metadata.
 %    \begin{macrocode}
-  {\sffamily\fontsize{7}{9}\selectfont
+  {\sffamily\fontsize{8}{14}\selectfont
   \begin{tabular}{%
-      @{}p{.225\textwidth}%
-      @{}p{.325\textwidth}%
-      @{}p{.25\textwidth}%
-      @{}p{.2\textwidth}@{}}%
+      @{}p{.265\textwidth}%
+      @{}p{.335\textwidth}%
+      @{}p{.22\textwidth}%
+      @{}p{.15\textwidth}@{}}%
     \textcolor{muletter@color@secondary}{%
       \muletter@string{yourletter}:} &
       \textcolor{muletter@color@secondary}{%
@@ -488,13 +567,16 @@
     \mbox{\muletter@data@email@contact} &
     \mbox{\muletter@data@place}\newline
     \mbox{\muletter@data@date}
-  \end{tabular}}\par
-  \vspace\parskip
+  \end{tabular}}%
+  \\[\muletter@length@opening@top@padding]
 %    \end{macrocode}
 % We typeset the subject of the letter.
 %    \begin{macrocode}
-  {\bfseries\large\muletter@data@subject}\par
-  \vspace{.5\parskip}%
+  {%
+    \bfseries\fontsize{11}{14.5}\selectfont
+    \muletter@data@subject
+    \par
+  }%
 %    \end{macrocode}
 % We typeset the \meta{salutation}.
 %    \begin{macrocode}
@@ -526,7 +608,6 @@
       \includegraphics[height=4\medskipamount]%
         \muletter@data@signature@image\\
     \fi
-    \vspace{.5\medskipamount}%
 %    \end{macrocode}
 % We typeset the sender's name.
 %    \begin{macrocode}
@@ -903,6 +984,16 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\muletter@pathname@background}
+% |\muletter@pathname@background| is the pathname of the base directory
+% directly containing background files.
+%    \begin{macrocode}
+\newcommand*\muletter@pathname@background{%
+  \muletter@pathname@base background/%
+}%
+%    \end{macrocode}
+% \end{macro}
+%
 % \begin{macro}{\muletter@pathname@logo}
 % |\muletter@pathname@logo| is the pathname of the base directory
 % directly containing logo files.
@@ -933,6 +1024,18 @@
 %    \end{macrocode}
 % \end{macro}
 %
+% \begin{macro}{\muletter@filename@background}
+% |\muletter@filename@background| is the filename of background image
+% that will be included in the header of the first page in a letter.
+%    \begin{macrocode}
+\newcommand*\muletter@filename@background{%
+  \muletter@pathname@background muletter-background%
+    \ifx\undefined\muletter@option@monochrome
+      -color%
+    \fi
+}%
+%    \end{macrocode}
+% \end{macro}
 % \begin{macro}{\muletter@filename@logo}
 % |\muletter@filename@logo| is the filename of logo that will be
 % included in the header of the first page in a letter.
