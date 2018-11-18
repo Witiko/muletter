@@ -424,7 +424,7 @@
 %    \begin{macrocode}
 \let\muletter@original@letter\letter
 \renewcommand\letter[1]{%
-  \muletter@original@letter{#1}%
+  \muletter@original@letter{\bfseries\ignorespaces #1}%
   \stepcounter{muletter@counter@letterno}%
 }%
 %    \end{macrocode}
