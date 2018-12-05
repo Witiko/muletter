@@ -87,7 +87,7 @@
 %
 %    \begin{macrocode}
 \NeedsTeXFormat{LaTeX2e}%
-\ProvidesClass{muletter}[2018/11/18]%
+\ProvidesClass{muletter}[2018/12/05]%
 %    \end{macrocode}
 %
 % \tableofcontents
@@ -121,10 +121,6 @@
 % |\includegraphics| command.
 %    \begin{macrocode}
 \RequirePackage{etoolbox}%
-%    \end{macrocode}
-% The \textsf{tikz} package is used to display a background image.
-%    \begin{macrocode}
-  \RequirePackage{tikz}%
 %    \end{macrocode}
 % Based on the class options, we may also require the \textsf{cmap},
 % \textsf{fontenc}, \textsf{tgheros}, and \textsf{microtype} packages.
@@ -362,15 +358,6 @@
 % to the first page of a letter.
 %    \begin{macrocode}
 \renewcommand\ps@firstpage{%
-%    \end{macrocode}
-% We display the background image on the first page.
-%    \begin{macrocode}
-  \begin{tikzpicture}[overlay, remember picture]
-    \node[anchor=north west, yshift=-\voffset, inner sep=0pt]
-      at (current page.north west) {%
-        \includegraphics\muletter@filename@background
-    };
-  \end{tikzpicture}
 %    \end{macrocode}
 % \begin{macro}{\@oddhead}
 % |\@oddhead| is the document header. It contains a label in the
@@ -984,16 +971,6 @@
 %    \end{macrocode}
 % \end{macro}
 %
-% \begin{macro}{\muletter@pathname@background}
-% |\muletter@pathname@background| is the pathname of the base directory
-% directly containing background files.
-%    \begin{macrocode}
-\newcommand*\muletter@pathname@background{%
-  \muletter@pathname@base background/%
-}%
-%    \end{macrocode}
-% \end{macro}
-%
 % \begin{macro}{\muletter@pathname@logo}
 % |\muletter@pathname@logo| is the pathname of the base directory
 % directly containing logo files.
@@ -1020,19 +997,6 @@
 %    \begin{macrocode}
 \newcommand*\muletter@pathname@locale{%
   \muletter@pathname@base locale/%
-}%
-%    \end{macrocode}
-% \end{macro}
-%
-% \begin{macro}{\muletter@filename@background}
-% |\muletter@filename@background| is the filename of background image
-% that will be included in the header of the first page in a letter.
-%    \begin{macrocode}
-\newcommand*\muletter@filename@background{%
-  \muletter@pathname@background muletter-background%
-    \ifx\undefined\muletter@option@monochrome
-      -color%
-    \fi
 }%
 %    \end{macrocode}
 % \end{macro}
