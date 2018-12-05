@@ -122,6 +122,15 @@
 %    \begin{macrocode}
 \RequirePackage{etoolbox}%
 %    \end{macrocode}
+% The \textsf{array} package is used for specifying the format of
+% table columns.
+%    \begin{macrocode}
+\RequirePackage{array}%
+%    \end{macrocode}
+% The \textsf{ragged2e} package is used to typeset ragged-right text.
+%    \begin{macrocode}
+\RequirePackage{ragged2e}%
+%    \end{macrocode}
 % Based on the class options, we may also require the \textsf{cmap},
 % \textsf{fontenc}, \textsf{tgheros}, and \textsf{microtype} packages.
 %
@@ -367,7 +376,6 @@
     \hspace{-\muletter@length@label@overhang}%
     \hspace{-\muletter@length@label@left@margin}%
     \muletter@subroutine@includegraphics
-      [height=\headheight]%
       {\muletter@filename@label}%
       {\muletter@filename@label@fallback}%
   }%
@@ -390,7 +398,9 @@
           {\muletter@filename@logo}%
           {\muletter@filename@logo@fallback}%
       }%
-      \begin{tabular}{@{}p{\muletter@length@label@overhang}@{}%
+      \begin{tabular}{%
+        @{}>{\RaggedRight\arraybackslash}p{\muletter@length@label@overhang}%
+        @{}>{\RaggedRight\arraybackslash}%
         p{\dimexpr(\textwidth - \muletter@temp@length)}@{}}
           & \textcolor{muletter@color@secondary}{%
               \textbf{%
@@ -403,8 +413,10 @@
             }\\
           & \textcolor{muletter@color@secondary}{%
               \muletter@string{telephone}: \muletter@data@telephone,
+              \penalty -5000
               \muletter@string{email}: \muletter@data@email,
-              \muletter@data@webpage
+              \penalty -5000
+              \muletter@string{webpage}: \muletter@data@webpage
             }\\
           & \textcolor{muletter@color@secondary}{%
               \muletter@string{bank}: \muletter@data@bank,
@@ -940,7 +952,8 @@
 %   Faculty of Education & |ped| \\
 %   Faculty of Arts & |phil| \\
 %   Masaryk University Press & |press| \\
-%   Rector's Office & |rect| \\
+%   Rector's Office & |rect-office| \\
+%   Rector & |rect| \\
 %   Faculty of Science & |sci| \\
 %   Accomodation and Catering Services & |skm| \\
 %   Support Centre for Students with Special Needs & |teiresias| \\
@@ -1153,6 +1166,14 @@
 \newcommand*\muletter@string@english@email{E}%
 %    \end{macrocode}
 % \end{macro}
+% \begin{macro}{\muletter@string@english@webpage}
+% |\muletter@string@|\meta{locale}|@webpage| is the label displayed
+% prior to the address of the sender's web page in the footer of the
+% first page in a letter.
+%    \begin{macrocode}
+\newcommand*\muletter@string@english@webpage{W}%
+%    \end{macrocode}
+% \end{macro}
 % \begin{macro}{\muletter@string@english@bank}
 % |\muletter@string@|\meta{locale}|@bank| is the label displayed
 % prior to the name of the sender's bank in the footer of the first page
@@ -1166,7 +1187,7 @@
 % prior to the sender's bank account number in the footer of the first
 % page in a letter.
 %    \begin{macrocode}
-\newcommand*\muletter@string@english@account{Acc. No.}%
+\newcommand*\muletter@string@english@account{AN}%
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\muletter@string@english@tin}
@@ -1174,7 +1195,7 @@
 % prior to the sender's taxpayer's identification number in the footer
 % of the first page in a letter.
 %    \begin{macrocode}
-\newcommand*\muletter@string@english@tin{TIN}%
+\newcommand*\muletter@string@english@tin{ID}%
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\muletter@string@english@vatin}
@@ -1182,7 +1203,7 @@
 % prior to the sender's \textsc{vat} identification number in the footer
 % of the first page in a letter.
 %    \begin{macrocode}
-\newcommand*\muletter@string@english@vatin{VATIN}%
+\newcommand*\muletter@string@english@vatin{Tax ID}%
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\muletter@string@english@afterfooter}
@@ -1190,7 +1211,7 @@
 % after the footer of the first page in a letter.
 %    \begin{macrocode}
 \newcommand*\muletter@string@english@afterfooter{%
-  Please quote the Ref. No. in your reply.}%
+  Please quote the Reference Number in your reply.}%
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\muletter@string@english@yourletter}

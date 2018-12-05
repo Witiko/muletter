@@ -4,6 +4,9 @@
 \gdef\muletter@string@czech@email{%
   E%
 }%
+\gdef\muletter@string@czech@webpage{%
+  W%
+}%
 \gdef\muletter@string@czech@bank{%
   Bankovn\'i spojen\'i%
 }%
