@@ -382,8 +382,9 @@
 %    \end{macrocode}
 % \end{macro}
 % \begin{macro}{\@oddfoot}
-% |\@oddfoot| is the document footer. It contains page numbers along
-% with sender information and a logo in the |firstpage| page style.
+% |\@oddfoot| is the document footer. In the |firstpage| page style, it
+% contains page numbers along with sender information and a logo if
+% \cs{ifmuletterlogo} is true.
 %    \begin{macrocode}
   \def\@oddfoot{%
     \sffamily\fontsize{8}{12}\selectfont
@@ -394,9 +395,11 @@
 % We typeset sender information.
 %    \begin{macrocode}
       \settowidth\muletter@temp@length{%
-        \muletter@subroutine@includegraphics
-          {\muletter@filename@logo}%
-          {\muletter@filename@logo@fallback}%
+        \ifmuletterlogo
+          \muletter@subroutine@includegraphics
+            {\muletter@filename@logo}%
+            {\muletter@filename@logo@fallback}%
+        \fi
       }%
       \begin{tabular}{%
         @{}>{\RaggedRight\arraybackslash}p{\muletter@length@label@overhang}%
@@ -435,13 +438,15 @@
           }
       \end{tabular}%
 %    \end{macrocode}
-% We typeset a logo.
+% If \cs{ifmuletterlogo} is true, we typeset a logo.
 %    \begin{macrocode}
-      \hfill\begin{minipage}[c]\muletter@temp@length
-        \muletter@subroutine@includegraphics
-          {\muletter@filename@logo}%
-          {\muletter@filename@logo@fallback}%
-      \end{minipage}%
+      \ifmuletterlogo
+        \hfill\begin{minipage}[c]\muletter@temp@length
+          \muletter@subroutine@includegraphics
+            {\muletter@filename@logo}%
+            {\muletter@filename@logo@fallback}%
+        \end{minipage}%
+      \fi
     \end{minipage}
   }%
 }%
@@ -1092,6 +1097,16 @@
   \includegraphics[#1]{#2}%
   \endgroup
 }%
+%    \end{macrocode}
+% \end{macro}
+%
+% \subsection{Conditionals}
+% \begin{macro}{\ifmuletterlogo}
+% \cs{ifmuletterlogo} controls whether a logo is displayed in the
+% footer of a page in the |firstpage| style.
+%    \begin{macrocode}
+\newif\ifmuletterlogo
+\muletterlogofalse
 %    \end{macrocode}
 % \end{macro}
 %
