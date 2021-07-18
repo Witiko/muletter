@@ -1,0 +1,35 @@
+image: texlive/texlive
+
+stages:
+  - build
+
+Typeset documentation:
+  stage: build
+  tags:
+    - shared-fi
+  before_script:
+    - xetex muletter.ins
+  script:
+    - latexmk muletter.dtx
+  artifacts:
+    paths:
+      - muletter.pdf
+    expire_in: 1 week
+
+Typeset example documents:
+  stage: build
+  tags:
+    - shared-fi
+  before_script:
+    - xetex muletter.ins
+    - mkdir -p ~/texmf/tex/latex/muletter/
+    - cp -r muletter.cls logo/ label/ locale/ ~/texmf/tex/latex/muletter/
+    - cd example
+    - xetex example.ins
+  script:
+    - ls *.tex | xargs latexmk
+    - rm signature.pdf
+  artifacts:
+    paths:
+      - example/*.pdf
+    expire_in: 1 week
