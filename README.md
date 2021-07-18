@@ -16,7 +16,7 @@ To perform a local installation,
 
   1. create the base directory `<TEXMF>/tex/latex/muletter/` and
   2. copy the file `muletter.cls` and the subdirectories `logo/`,
-     `label/`, and `patch/` into the base directory.
+     `label/`, and `locale/` into the base directory.
 
 `<TEXMF>` corresponds to a root of your TeX distribution, such as
 `/usr/share/texmf` and `~/texmf` on UN\*X systems or
@@ -30,7 +30,7 @@ Alternatively, you can also
   1. place the file `muletter.cls` next to your LaTeX document,
   2. create the base directory `muletter/` next to your LaTeX document,
      and
-  3. copy the subdirectories `logo/`, `label/`, and `patch/` into the base
+  3. copy the subdirectories `logo/`, `label/`, and `locale/` into the base
      directory.
 
 This way you can distribute your LaTeX document and muletter together.
