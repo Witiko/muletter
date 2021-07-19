@@ -27,7 +27,7 @@ Typeset example documents:
     - cd example
     - xetex example.ins
   script:
-    - ls *.tex | xargs latexmk
+    - ls *.tex | xargs -n 1 sh -c 'latexmk $0 || exit 255'
     - rm signature.pdf
   artifacts:
     paths:
